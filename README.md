@@ -376,6 +376,12 @@ jobs = 3
 - `cd jamal_martin/`
 - `rm template_martin.conf`
 
+---
+
+> You can find my martin user folder here: [martin_install/README.md at main · giuliogiamello/martin_install](https://github.com/giuliogiamello/martin_install/blob/main/README.md)
+
+---
+
 > Test `martin` works correctly
 
 - `cd ~/jamal_martin/problems/SM`
