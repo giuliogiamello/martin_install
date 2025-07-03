@@ -1,0 +1,9 @@
+{
+    "fields": {
+        "fPsi1":     ["$\\bar \\psi_1$",         "anti fermion"],
+        "fPsi2":     ["$\\bar \\psi_2$",         "anti fermion"],
+        "fpsi1":     ["$\\psi_1$",               "fermion"],
+        "fpsi2":     ["$\\psi_2$",               "fermion"],
+        "phi" :	     ["$\\phi$",               "scalar"]
+    }
+}                           

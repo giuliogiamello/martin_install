@@ -1,0 +1,93 @@
+
+
+%  QED  of leptons and photons
+
+
+ [ submodels :: qed1, qed2, qed3 ]
+
+
+ [ p_sectors :: p_gen1, p_gen2, p_gen3 ]
+
+ [ v_sectors :: v_gen1, v_gen2, v_gen3 ]
+
+
+ [ constants :: name ]
+
+
+ submodel[qed1]
+
+   [ include :: p_gen1, v_gen1 ]
+
+   [ name = '1-lepton QED' ]
+
+ end[qed1]
+
+
+ submodel[qed2]
+
+   [ include :: p_gen1, v_gen1, p_gen2, v_gen2 ]
+
+   [ name = '2-lepton QED' ]
+
+ end[qed2]
+
+
+ submodel[qed3]
+
+   [ exclude :: ]
+
+   [ name = '3-lepton QED' ]
+
+ end[qed3]
+
+
+%   the propagators
+
+
+ [photon, photon, + ]
+
+
+ sector[p_gen1]
+
+   [e_minus, e_plus, - ]
+
+ end[p_gen1]
+
+
+ sector[p_gen2]
+
+   [mu_minus, mu_plus, - ]
+
+ end[p_gen2]
+
+
+ sector[p_gen3]
+
+   [tau_minus, tau_plus, - ]
+
+ end[p_gen3]
+
+
+%   the vertices
+
+
+ sector[v_gen1]
+
+ [e_plus, e_minus, photon ]
+
+ end[v_gen1]
+
+
+ sector[v_gen2]
+
+   [mu_plus, mu_minus, photon ]
+
+ end[v_gen2]
+
+
+ sector[v_gen3]
+
+   [tau_plus, tau_minus, photon ]
+
+ end[v_gen3]
+

@@ -1,0 +1,21 @@
+
+ config= info ;
+
+%  messages= 'msg.txt' ;
+
+ output= '' ;
+
+ style= 'form.sty' ;
+
+ model= qed3 // 'qedx';
+
+ in= e_minus ;
+
+ out= e_minus, photon ;
+
+ loops= 5 ;
+
+ loop_momentum= ;
+
+ options= onepi, floop ;
+

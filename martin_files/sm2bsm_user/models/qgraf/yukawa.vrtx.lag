@@ -1,0 +1,25 @@
+*******************************************************************
+* Copyright (C) 2009-2020 Joachim Brod, Emmanuel Stamou
+*
+* This file is part of MaRTIn.
+*
+* MaRTIn is lisenced under GPLv3. For further details see the AUTHORS
+* file in the main MaRTIn directory.
+*******************************************************************
+
+************************************************
+*  vertices with fermions
+*  [Antifermion,fermion,other,...]
+************************************************
+
+*  with scalar
+  [fPsi1,fpsi1,phi;vfunct='Fphipsi1psi1']
+  [fPsi1,fpsi2,phi;vfunct='Fphipsi1psi2']
+  [fPsi2,fpsi1,phi;vfunct='Fphipsi2psi1']
+  [fPsi2,fpsi2,phi;vfunct='Fphipsi2psi2']
+
+************************************************
+* vertices without fermions
+************************************************
+
+* vim: syntax=form

@@ -1,0 +1,96 @@
+*******************************************************************
+*** INPUT *********************************************************
+*******************************************************************
+
+*--#[ QGRAF :
+model = 'yukawa.prop.lag' ;
+model = 'yukawa.vrtx.lag' ;
+
+in =  fpsi1[q1];
+out = fpsi1[q1];
+
+loops = 2 ;
+loop_momentum = p;
+
+options = notadpoles;
+
+
+*--#] QGRAF :
+
+*--#[ MAIN :
+*
+
+#define FINALPRINT
+
+* Mathematica output
+#define MATHOUTPUT
+
+* write info file
+#define INFOFILE
+
+* do not declare rat() as polyratfun
+*#define NOPOLYRAT
+
+*******************************************************************
+* The physics *****************************************************
+*******************************************************************
+
+#define FINALEPLIM "-1"
+
+**** Select model ****
+#define NM "1"
+#define MODEL1 "Yukawa"
+
+**** Gauge parameters ****
+
+**** Perform Infrared Rearrangement (IRA) ****
+*#define IRA "1"
+
+**** Expand Denominators in external momenta
+#define EXPDENO "0"
+
+**** No integration, keep integrals
+*#define GENERICLOOPFUNCTIONS
+
+**** the dirac algebra scheme: NDR, sNDR, HV, LARIN
+#define DSCHEME "sNDR"
+
+*--#] MAIN :
+
+*--#[ MASSES :
+* This fold needs only be present for certain massive two-loop diagrams.
+*--#] MASSES :
+
+*******************************************************************
+* Optional FORM folds for twoloopmass *****************************
+*******************************************************************
+
+*--#[ USERDEF :
+*--#] USERDEF :
+
+*--#[ TEST :
+*--#] TEST :
+
+*--#[ FOLD1 :
+*--#] FOLD1 :
+
+*--#[ FOLD2 :
+*--#] FOLD2 :
+
+*--#[ FOLD3 :
+*--#] FOLD3 :
+
+*--#[ FOLD4 :
+*--#] FOLD4 :
+
+*--#[ FOLD5 :
+#call replaceeM(2);
+*--#] FOLD5 :
+
+*--#[ PRINT :
+bracket ep,USp,VSp;
+print +s;
+.sort
+*--#] PRINT :
+    
+* vim: syntax=form

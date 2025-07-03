@@ -1,0 +1,21 @@
+*******************************************************************
+* Copyright (C) 2009-2020 Joachim Brod, Emmanuel Stamou
+*
+* This file is part of MaRTIn.
+*
+* MaRTIn is lisenced under GPLv3. For further details see the AUTHORS
+* file in the main MaRTIn directory.
+*******************************************************************
+
+************************************************
+** propagators [fermion,Antifermion;...]      **
+************************************************
+
+*  fermions
+  [fpsi1,fPsi1,-;pfunct='propferm',m='Mpsi1']
+  [fpsi2,fPsi2,-;pfunct='propferm',m='Mpsi2']
+
+*  scalar 
+   [phi,phi,+;pfunct='propphi',m='Mphi'] 
+
+* vim: syntax=form

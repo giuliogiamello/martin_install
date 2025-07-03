@@ -1,0 +1,50 @@
+*******************************************************************
+* Copyright (C) 2009-2020 Joachim Brod, Emmanuel Stamou
+*
+* This file is part of MaRTIn.
+*
+* MaRTIn is lisenced under GPLv3. For further details see the AUTHORS
+* file in the main MaRTIn directory.
+*******************************************************************
+
+************************************************
+** propagators [fermion,Antifermion;...]      **
+************************************************
+
+*  leptons
+  [fnue,fNue,    -;pfunct='L',m='M0']
+  [fe,fE,        -;pfunct='L',m='Melectron']
+  [fnumu,fNumu,  -;pfunct='L',m='M0']
+  [fmu,fMu,      -;pfunct='L',m='Mmu']
+  [fnutau,fNutau,-;pfunct='L',m='M0']
+  [ftau,fTau,    -;pfunct='L',m='Mtau']
+
+*  quarks
+  [fu,fU,-;pfunct='Q',m='Mup']
+  [fd,fD,-;pfunct='Q',m='Mdown']
+  [fc,fC,-;pfunct='Q',m='Mcharm']
+  [fs,fS,-;pfunct='Q',m='Mstrange']
+  [ft,fT,-;pfunct='Q',m='Mtop']
+  [fb,fB,-;pfunct='Q',m='Mbottom']
+
+*  gaugebosons
+  [g,g,+;pfunct='Dg'  ,m='M0']
+  [a,a,+;pfunct='Da'  ,m='M0']
+  [z,z,+;pfunct='DZ'  ,m='MZ'] 
+  [wm,wp,+;pfunct='DW',m='MW']
+
+*  goldstones 
+  [Gm,Gp,+;pfunct='Dh',m='MW'] 
+  [G0,G0,+;pfunct='Dh',m='MZ']
+
+*  ghosts
+  [ug,Ug,-;  pfunct='Dgh', m='M0']
+  [ua,Ua,-;  pfunct='Dh',  m='M0'] 
+  [uz,Uz,-;  pfunct='Dh',  m='MZ'] 
+  [uwp,Uwp,-;pfunct='Dh',  m='MW'] 
+  [uwm,Uwm,-;pfunct='Dh',  m='MW']
+
+*  higgs 
+  [h,h,+;pfunct='Dh',m='Mhiggs'] 
+
+* vim: syntax=form

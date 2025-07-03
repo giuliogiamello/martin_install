@@ -1,0 +1,310 @@
+*******************************************************************
+* Copyright (C) 2009-2020 Joachim Brod, Emmanuel Stamou
+*
+* This file is part of MaRTIn.
+*
+* MaRTIn is lisenced under GPLv3. For further details see the AUTHORS
+* file in the main MaRTIn directory.
+*******************************************************************
+
+*--#[ DEF :
+*
+
+#define DIMENSION "4"
+
+* Field symbols
+
+s fpsi1 fPsi1 fpsi2 fPsi2 phi;
+
+set allfields: fpsi1 fPsi1 fpsi2 fPsi2 phi;
+
+set fermions: fpsi1 fpsi2;
+
+set antifermions: fPsi1 fPsi2;
+
+*** constants
+s g11 g12 g21 g22;
+
+* Masses
+s Mpsi1 Mpsi2 Mphi;
+
+* propagators
+cf propferm propphi;
+
+
+**********************************
+* Vertices with fermions 
+**********************************
+
+* FFS
+
+s vphipsi1psi1 vphipsi1psi2 vphipsi2psi1 vphipsi2psi2;
+cf Fphipsi1psi1 Fphipsi1psi2 Fphipsi2psi1 Fphipsi2psi2;
+
+**********************************
+* vertices without fermions
+**********************************
+
+* SSSS 
+*
+*--#] DEF :
+
+*--#[ AMASSES :
+* Include all symbols in the following list that represent masses appearing in the model:
+ set massorder: Mpsi1 Mpsi2 Mphi;
+
+* define length of set
+#$massnum = 3;
+
+*--#] AMASSES :
+
+*--#[ POLARIZATION :
+*
+
+id dummyspinor(xx1?, xx2?neg_, xx3?neg_) = dummyspinor(xx1, nneg(-xx2), nneg(-xx3));
+
+id pol(xx1?allfields, xx2?neg_, q1?) = pol(xx1, nneg(-xx2), q1);
+
+repeat;
+
+* fermions:
+
+id pol(xx2?fermions,nneg(xx1?even_),q1?)*dummyspinor(xx3?, ?b, nneg(xx1?), ?c)*DIRAC(xx3?,?a)
+   = UbarSp(xx2, mom, q1)*DIRAC(xx3,?a)*dummyspinor(xx3, ?b, nneg(xx1), ?c) ;
+
+id pol(xx2?antifermions,nneg(xx1?even_),q1?)*dummyspinor(xx3?, ?b, nneg(xx1?), ?c)*DIRAC(xx3?,?a)
+   = DIRAC(xx3,?a)*VSp(xx2, mom, q1)*dummyspinor(xx3, ?b, nneg(xx1), ?c) ;
+
+id pol(xx2?fermions,nneg(xx1?odd_),q1?)*dummyspinor(xx3?, ?b, nneg(xx1?), ?c)*DIRAC(xx3?,?a)
+   = DIRAC(xx3,?a)*USp(xx2, mom, q1)*dummyspinor(xx3, ?b, nneg(xx1), ?c) ;
+
+id pol(xx2?antifermions,nneg(xx1?odd_),q1?)*dummyspinor(xx3?, ?b, nneg(xx1?), ?c)*DIRAC(xx3?,?a)
+   = VbarSp(xx2, mom, q1)*DIRAC(xx3,?a)*dummyspinor(xx3, ?b, nneg(xx1), ?c) ;
+
+endrepeat;
+
+id dummyspinor(?a) = 1;
+
+*** Polarization vectors ***
+
+id pol(phi, nneg(xx2?odd_), q1?) = pol(phi, mom, q1, in);
+id pol(phi, nneg(xx2?even_), q1?) = pol(phi, mom, q1, out);
+
+.sort
+
+*
+*--#] POLARIZATION :
+
+*--#[ GROUPTHEORY :
+
+*--#] GROUPTHEORY :
+
+*--#[ INSERTPROPAGATORS :
+
+* The fermion propagators
+id propferm(xx1?pos_,xx2?pos_,lorentz,?x,mom,?p,mass,M?,field,fname?) = i_*F(xx1,xx2,mom,?p,mass,M,field,fname)*Deno(?p,M);
+
+
+* The scalar propagator
+id propphi(xx1?pos_,xx2?pos_,lorentz,?a,mom,?p,mass,Mphi,field,fname?) = i_*Deno(?p,Mphi);
+
+*--#] INSERTPROPAGATORS :
+
+*--#[ INSERTVERTICES :
+
+* SSSS
+
+
+*--#] INSERTVERTICES :
+
+*--#[ INSERTFERMIONVERTICES :
+*--#] INSERTFERMIONVERTICES :
+
+
+*--#[ FF :
+*
+Fphipsi1psi1,
+Fphipsi1psi2,
+Fphipsi2psi1,
+Fphipsi2psi2,
+*
+*--#] FF :
+
+*--#[ VERTICES :
+*
+vphipsi1psi1,
+vphipsi1psi2,
+vphipsi2psi1,
+vphipsi2psi2,
+*
+*--#] VERTICES :
+
+*--#[ VVCOUP :
+*--#] VVCOUP :
+
+*--#[ VVACOUPV :
+*--#] VVACOUPV :
+
+*--#[ VVACOUPL :
+*--#] VVACOUPL :
+
+*--#[ VVACOUPR :
+*--#] VVACOUPR :
+
+*--#[ SCOUPV :
+vphipsi1psi1,
+vphipsi1psi2,
+vphipsi2psi1,
+vphipsi2psi2,
+*--#] SCOUPV :
+
+*--#[ SACOUPV :
+*--#] SACOUPV :
+
+*--#[ SACOUPLV :
+*--#] SACOUPLV :
+
+*--#[ SACOUPRV :
+*--#] SACOUPRV :
+
+***************************
+*** VV generic vertices ***
+***************************
+*--#[ VVgenCOUP :
+*--#] VVgenCOUP :
+
+*--#[ vVVgenCOUP1 :
+*--#] vVVgenCOUP1 :
+
+*--#[ vVVgenCOUP2 :
+*--#] vVVgenCOUP2 :
+
+*--#[ vVVgenCOUP3 :
+*--#] vVVgenCOUP3 :
+
+***************************
+*** SS generic vertices ***
+***************************
+*--#[ SSgenCOUP :
+*--#] SSgenCOUP :
+
+*--#[ vSSgenCOUP1 :
+*--#] vSSgenCOUP1 :
+
+*--#[ vSSgenCOUP2 :
+*--#] vSSgenCOUP2 :
+
+***************************
+*** VS generic vertices ***
+***************************
+*--#[ VSgenCOUP :
+*--#] VSgenCOUP :
+
+*--#[ vVSgenCOUP1 :
+*--#] vVSgenCOUP1 :
+
+****************************
+*** VVV generic vertices ***
+****************************
+*--#[ VVVgenCOUP :
+*--#] VVVgenCOUP :
+
+*--#[ vVVVgenCOUP :
+*--#] vVVVgenCOUP :
+
+
+****************************
+*** SVV generic vertices ***
+****************************
+*--#[ SVVgenCOUP :
+*--#] SVVgenCOUP :
+
+*--#[ vSVVgenCOUP :
+*--#] vSVVgenCOUP :
+
+
+****************************
+*** SSS generic vertices ***
+****************************
+*--#[ SSSgenCOUP :
+*--#] SSSgenCOUP :
+
+*--#[ vSSSgenCOUP :
+*--#] vSSSgenCOUP :
+
+
+*****************************
+*** SSSS generic vertices ***
+*****************************
+*--#[ SSSSgenCOUP :
+*--#] SSSSgenCOUP :
+
+*--#[ vSSSSgenCOUP :
+*--#] vSSSSgenCOUP :
+
+
+*****************************
+*** VVSS generic vertices ***
+*****************************
+*--#[ VVSSgenCOUP :
+*--#] VVSSgenCOUP :
+
+*--#[ vVVSSgenCOUP :
+*--#] vVVSSgenCOUP :
+
+
+*****************************
+*** VVVV generic vertices ***
+*****************************
+*--#[ VVVVgenCOUP :
+*--#] VVVVgenCOUP :
+
+*--#[ vVVVVgenCOUP :
+*--#] vVVVVgenCOUP :
+
+
+****************************
+*** VSS generic vertices ***
+****************************
+*--#[ VSSgenCOUP :
+*--#] VSSgenCOUP :
+
+*--#[ vVSSgenCOUP :
+*--#] vVSSgenCOUP :
+
+
+******************************************
+*** VGG (ghost ghost) generic vertices ***
+******************************************
+*--#[ VGGgenCOUP :
+*--#] VGGgenCOUP :
+
+*--#[ vVGGgenCOUP :
+*--#] vVGGgenCOUP :
+
+
+*--#[ INSERTCOUPLINGS :
+*
+
+************************************
+* vertices with fermions           *
+************************************
+
+
+id vphipsi1psi1 = -i_ * g11;
+id vphipsi1psi2 = -i_ * g12;
+id vphipsi2psi1 = -i_ * g21;
+id vphipsi2psi2 = -i_ * g22;
+
+
+************************************
+* vertices without fermions        *
+************************************
+
+
+
+
+
+*--#] INSERTCOUPLINGS :
+
+* vim: syntax=form
