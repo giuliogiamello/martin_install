@@ -69,7 +69,7 @@ Memory: 4622MiB / 15407MiB
 - `./configure --prefix=~/bsm/form_build`
 - `make`
 - `make install`
-- ~/bsm/form_build/bin/form`
+- `~/bsm/form_build/bin/form`
 
 > Create link to the `form` executable
 
