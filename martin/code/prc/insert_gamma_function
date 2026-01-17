@@ -1,0 +1,141 @@
+*******************************************************************
+* Copyright (C) 2009-2023 Joachim Brod, Emmanuel Stamou
+*
+* This file is part of MaRTIn.
+*
+* MaRTIn is lisenced under GPLv3. For further details see the AUTHORS
+* file in the main MaRTIn directory.
+*******************************************************************
+
+*******************************************************************
+*** Expand Gamma functions ****************************************
+*******************************************************************
+
+*** Consistency in the order of epsilon in expansion must be checked.
+
+* GAMMA(x,y*ep) = Gamma(x+y*ep)
+* GAMMAINV(x,y*ep) = 1/Gamma(x+y*ep)
+
+
+*** Expand Gamma functions ****************************************
+
+repeat id only GAMMA(0,xx1?) = gamep(0,xx1);
+
+*** Recursion relation for Gamma functions
+
+repeat;
+*id only GAMMA(0,xx1?) = gamep(0,xx1);
+id GAMMA( 1,xx1?) = gamep( 1,xx1);
+id GAMMA(-1,xx1?) = gamep(-1,xx1);
+id GAMMA(xx1?pos_,xx2?) = gamhelp(xx1-1,xx2)*GAMMA(xx1-1,xx2);
+id GAMMA(xx1?neg_,xx2?) = gaminvhelp(xx1,xx2)*GAMMA(xx1+1,xx2);
+endrepeat;
+
+repeat;
+if (match(GAMMA(xx1?$num, ?z)));
+  if ( $num > +1 );
+    id GAMMA($num,xx2?) = gamhelp($num-1,xx2)*GAMMA($num-1,xx2);
+  endif;
+  if ( $num < -1 );
+    id GAMMA($num,xx2?) = gaminvhelp($num,xx2)*GAMMA($num+1,xx2);
+  endif;
+endif;
+id GAMMA( 1/2,xx1?) = gamep( 1/2,xx1);
+id GAMMA(-1/2,xx1?) = gamep(-1/2,xx1);
+endrepeat;
+
+
+*** Expand inverse Gamma functions ********************************
+
+repeat id only GAMMAINV(0,xx1?) = gaminvep(0,xx1);
+
+*** Recursion relation for inverse Gamma functions ****************
+
+repeat;
+*id only GAMMAINV(0,xx1?) = gaminvep(0,xx1);
+id GAMMAINV(1,xx1?) = gaminvep(1,xx1);
+id GAMMAINV(-1,xx1?) = gaminvep(-1,xx1);
+id GAMMAINV(xx1?pos_,xx2?) = gaminvhelp(xx1-1,xx2)*GAMMAINV(xx1-1,xx2);
+id GAMMAINV(xx1?neg_,xx2?) = gamhelp(xx1,xx2)*GAMMAINV(xx1+1,xx2);
+endrepeat;
+
+repeat;
+if (match(GAMMAINV(xx1?$num, ?z)));
+  if ( $num > +1 );
+    id GAMMAINV($num,xx2?) = gaminvhelp($num-1,xx2)*GAMMAINV($num-1,xx2);
+  endif;
+  if ( $num < -1 );
+    id GAMMAINV($num,xx2?) = gamhelp($num,xx2)*GAMMAINV($num+1,xx2);
+  endif;
+endif;
+id GAMMAINV( 1/2,xx1?) = gaminvep( 1/2,xx1);
+id GAMMAINV(-1/2,xx1?) = gaminvep(-1/2,xx1);
+endrepeat;
+
+.sort
+
+
+
+*** Resolve gamhelp and gaminvhelp ********************************
+
+id gamhelp(?a)*gaminvhelp(?a) = 1;
+
+id gamhelp(xx1?,xx2?) = xx1+xx2;
+id gaminvhelp(xx1?,xx2?) = 1/xx1*(1-xx2/xx1+(xx2/xx1)^2);
+
+*print +s;
+.sort
+
+
+
+*** Resolve gamep and gaminvep ************************************
+
+* Using the Weierstrass GAMMA(ep) = exp(-ep*gamma_E)/ep*(prod,k=1..infinity)(exp(ep/k)/(1+ep/k))
+*
+* GAMMA(ep) = exp(-ep*gamma_E)*(1/ep+1/2*(Zeta(2))*ep+O(ep^2))
+*           = 1/ep - gamma_E +1/2*(Zeta(2)*gamma_E^2)*ep + O(ep^2)
+*
+* Zeta(2) = pi^2/6 (Euler)
+*
+* The factor exp(-ep*gamma_E) is dropped in the verse and inverse GAMMA function expansion.
+*
+* Terms are kept at least up to O(ep^2).
+*
+* Polygamma(n,z) == d/dz (d/dz Gamma(z) / Gamma(z))
+
+
+id gamep(?a)*gaminvep(?a) = 1;
+
+id only gamep(1,0) = 1;
+
+id gamep(1,  xx1?) = 1 + Zeta(2)/2*xx1^2;
+
+id gamep(1/2,xx1?) = sqrt_(pi) + sqrt_(pi) * Polygamma(0,1/2) * xx1
+                              + 1/4 * ( sqrt_(pi)*pi^2 + 2*sqrt_(pi) * Polygamma(0,1/2)^2 ) * xx1^2;
+
+id gamep(0,  xx1?) = 1/xx1 + Zeta(2)/2*xx1 + xx1^2 * Polygamma(2,1)/6 ;
+
+id gamep(-1/2,xx1?) = - 2* sqrt_(pi) - 2 * sqrt_(pi) * Polygamma(0,-1/2) * xx1
+                              - 1/2 * ( sqrt_(pi)*pi^2 + 8*sqrt_(pi) + 2*sqrt_(pi) * Polygamma(0,-1/2)^2 ) * xx1^2;
+
+id gamep(-1,xx1?) = -1/xx1 - 1 - Zeta(2)/2*xx1 - xx1 - xx1^2 * (1 + Zeta(2)/2 + Polygamma(2,1)/6);
+
+id only gaminvep(1,0) = 1;
+id gaminvep(1,xx1?) = 1-Zeta(2)/2*xx1^2;
+
+id gaminvep(1/2,xx1?) = 1/sqrt_(pi) - 1/sqrt_(pi) * Polygamma(0,1/2) * xx1
+                              + 1/4/sqrt_(pi) * ( - pi^2 + 2*Polygamma(0,1/2)^2 ) * xx1^2;
+
+
+id gaminvep(0,xx1?) = xx1-Zeta(2)/2*xx1^3;
+
+id gaminvep(-1/2,xx1?) = -1/2/sqrt_(pi) + 1/2/sqrt_(pi) * Polygamma(0,-1/2) * xx1
+                              + 1/8/sqrt_(pi) * (8 + pi^2 - 2*Polygamma(0,-1/2)^2 ) * xx1^2;
+
+id gaminvep(-1,xx1?) = -xx1+xx1^2;
+
+.sort
+
+******************
+* vim: syntax=form
+******************

@@ -1,0 +1,261 @@
+*******************************************************************
+* Copyright (C) 2009-2020 Joachim Brod, Emmanuel Stamou
+*
+* This file is part of MaRTIn.
+*
+* MaRTIn is lisenced under GPLv3. For further details see the AUTHORS
+* file in the main MaRTIn directory.
+*******************************************************************
+
+*******************************************************************
+*                                                                 *
+* This program performs the Dirac algebra                         *
+*                                                                 *
+* - depending on DSCHEME moves the G5's to the right              *
+*                                                                 *
+* Uses a subroutine that:                                         *
+* - removes adjacent momenta, e.g., gam1(p1)*...*gam(p1)          *
+* - removes adjacent indices, e.g., gam1(mu)*...*gam(mu)          *
+* - brings every line into a standard order using disorder        *
+* - expresses everything in terms of d and -2ep dimensional objs  *
+*******************************************************************
+
+*******************************************************************
+*** Bracket out irrelevant stuff
+*******************************************************************
+b Gam1,Gam2,Gam3,Gam4,TR51,TR52,TR53,TR54,ddhat,ddtilde,dd,flagNumG5,e_;
+.sort
+
+collect TEMP1,TEMP2;
+
+*******************************************************************
+* What will happen will depend on the scheme chosen by the
+* user.
+* Here is how we'll treat the cases.
+*
+* DSCHEME == (s)NDR
+*           The DIRAC algebra in the open lines will be done using
+*           NDR relations.
+*
+* DSCHEME == HV
+*           The DIRAC algebra in the open lines will be done using
+*           only HV relations.
+*
+* DSCHEME == JEMhv
+*           Which relation will be used for the DIRAC algebra in
+*           the openlines will depend on how many G5's appeared
+*           in traces. If an even number of G5s appeared we'll use
+*           NDR for the open line. If an odd number of G5s appeared
+*           we'll use HV relation in the open line.
+*
+* DSCHEME == NDRmisiak
+*           No relation will be used at all. Instead evanescent
+*           operators will be introduced.
+*
+* DSCHEME == LARIN
+*           No G5 should appear since it should already have been
+*           substituted in favour of epsilon tensors.
+*
+* Good luck with all this madness.
+*******************************************************************
+*******************************************************************
+
+#if `DSCHEME'=="LARIN"
+  #do i=1,`$nol'
+    if (match(Gam`i'(?x,G5,?y))) exit "no G5 should appear in LARIN";
+  #enddo
+#endif
+
+*** Cases for which we will use NDR relations on the open lines
+#if ((`DSCHEME'=="NDR") || (`DSCHEME'=="LARIN") || (`DSCHEME'=="sNDR"))
+  multiply ndr;
+#endif
+
+*** Cases for which we will use HV relations on the open lines
+#if (`DSCHEME'=="HV")
+  multiply hv;
+#endif
+
+*** Cases for which we will use both HV and NDR
+#if (`DSCHEME'=="JEMhv")
+
+  multiply ndr;
+
+  #do LINE = {`$nol'+1},`$ncl';
+    if (match(flagNumG5(`LINE', xx1?odd_))) multiply hv;
+  #enddo
+
+  id hv^aa?pos_  = hv;
+  id ndr^aa?pos_ = ndr;
+  id ndr*hv      = hv;
+
+#endif
+
+*** Cases for which we will not use any relations
+#if (`DSCHEME'=="NDRmisiak")
+  multiply nndr;
+#endif
+
+*** Test
+#if `$nol' != 0
+  if ( (count(ndr,1)==0) && (count(hv,1)==0) && (count(nndr,1)==0) ) \
+    exit "At this stage either a hv or a ndr or and nndr should be present.";
+#else
+  id ndr  = 1;
+  id hv   = 1;
+  id nndr = 1;
+#endif
+
+
+*******************************************************************
+*** Move G5s to the right: NDR case *******************************
+*******************************************************************
+if (match(ndr));
+  id ndr = 1;
+
+* Reexpress in d-dim gammas
+  #do LINE = 1,`$nol'
+    repeat;
+      id once Gam`LINE'(?x,[-2ep],mu1?,?y) = Gam`LINE'(?x,[D-2ep],tempmu,?y)*ddhat(tempmu,mu1);
+      sum tempmu;
+    endrepeat;
+
+    repeat;
+      id once Gam`LINE'(?x,[D],   mu1?,?y) = Gam`LINE'(?x,[D-2ep],tempmu,?y)*ddtilde(tempmu,mu1);
+      sum tempmu;
+    endrepeat;
+  #enddo
+
+* Move G5 to the right
+  #do LINE = 1,`$nol'
+    repeat;
+      id Gam`LINE'(?x, G5, [D-2ep], mu1?, ?y) = -Gam`LINE'(?x, [D-2ep], mu1, G5, ?y);
+      id Gam`LINE'(?x, G5, G5, ?y) = Gam`LINE'(?x, ?y);
+    endrepeat;
+  #enddo
+
+* Contract back the metric tensors
+  #call contractMetric
+  id ddtilde(mu1?,mu2?) = d_(mu1,mu2) - ddhat(mu1,mu2);
+  #do LINE = 1,`$nol'
+    #call contractGamMetric(`LINE')
+  #enddo
+
+endif;
+
+.sort
+
+*******************************************************************
+*** Move G5s to the right: HV case ********************************
+*******************************************************************
+if (match(hv));
+  id hv = 1;
+
+* Move G5 to the right
+  #do LINE = 1,`$nol'
+    repeat id Gam`LINE'(?x, G5, G5, ?y) = Gam`LINE'(?x, ?y);
+
+    repeat;
+      id once Gam`LINE'(?x, G5, [D-2ep], mu1?, ?y) = -Gam`LINE'(?x, [D],    mu1, G5, ?y)
+                                                     +Gam`LINE'(?x, [-2ep], mu1, G5, ?y);
+
+      id      Gam`LINE'(?x, G5, G5, ?y)            =  Gam`LINE'(?x, ?y);
+
+      id once Gam`LINE'(?x, G5, [D],     mu1?, ?y) = -Gam`LINE'(?x, [D],    mu1, G5, ?y);
+
+      id      Gam`LINE'(?x, G5, G5, ?y)            =  Gam`LINE'(?x, ?y);
+
+      id once Gam`LINE'(?x, G5, [-2ep],  mu1?, ?y) = +Gam`LINE'(?x, [-2ep], mu1, G5, ?y);
+
+      id      Gam`LINE'(?x, G5, G5, ?y)            =  Gam`LINE'(?x, ?y);
+
+    endrepeat;
+  #enddo
+
+* Express in terms of d and -2*ep dimensional objects
+  #do LINE = 1,`$nol'
+    repeat id Gam`LINE'(?x,[D],mu1?,?y) = Gam`LINE'(?x,[D-2ep],mu1,?y) - Gam`LINE'(?x,[-2ep],mu1,?y);
+  #enddo
+
+endif;
+
+.sort
+
+
+*******************************************************************
+*** Move G5s to the right: NDRmisiak case *************************
+*******************************************************************
+if (match(nndr));
+  id nndr = 1;
+
+  #do LINE = 1,`$nol'
+
+    if ( (match(Gam`LINE'(?x,[D], ?y))) || (match(Gam`LINE'(?x,[-2ep],?y))));
+      exit "Why do you have D or -2ep gammas here? This should not happen in NDRmisiak";
+    endif;
+
+*   Move G5 to the right introducing evanescent structures on the way
+    repeat id Gam`LINE'(?x, G5, G5, ?y) = Gam`LINE'(?x, ?y);
+
+    repeat;
+      id once Gam`LINE'(?x, G5, [D-2ep], mu1?, ?y) = Gam`LINE'(?x, AnC5,    mu1,     ?y)
+                                                    -Gam`LINE'(?x, [D-2ep], mu1, G5, ?y);
+      id Gam`LINE'(?x, G5, G5, ?y) = Gam`LINE'(?x, ?y);
+
+      id once Gam`LINE'(?x, G5, AnC5,   mu1?, ?y) = Gam`LINE'(?x, AnC5,    mu1, G5, ?y);
+
+      id Gam`LINE'(?x, G5, G5, ?y) = Gam`LINE'(?x, ?y);
+    endrepeat;
+  #enddo
+
+endif;
+
+.sort
+
+*** Test that the G5's are indeed in the right
+#do LINE = 1,`$nol'
+  if (match(Gam`LINE'(?x,G5,?y,G5,?z))) exit "Only one G5 should be present at this stage.";
+  if (match(Gam`LINE'(?x,G5,aa?,?y)))   exit "The G5 should be on the right of the gamma line.";
+#enddo
+
+
+*** Test that only d and -2ep objects are present
+#do LINE = 1,`$nol'
+  if (match(Gam`LINE'(?x,[D],?y))) exit "Only d and -2ep objects should be present at this stage.";
+#enddo
+
+if (match(ddtilde(mu1?,mu2?)))   exit "Only d and -2ep objects should be present at this stage.";
+
+*******************************************************************
+*** Bring back original term
+*******************************************************************
+
+id TEMP1(aa?) = aa;
+id TEMP2(aa?) = aa;
+.sort
+
+*******************************************************************
+* Now all G5's are at the right. We will now contract adjacent
+* momenta and indices and order momenta, indices, and hats on
+* each line
+*******************************************************************
+
+* Remake GamLINE from NDRmisiak traces
+#do LINE = {`$nol'+1}, `$ncl'
+  #call convertTR5toGam(`LINE')
+#enddo
+
+* Contract and sort GamLINES
+#call treatGams(`$ncl')
+
+* Remake TR5LINE for NDRmisiak traces
+#do LINE = {`$nol'+1}, `$ncl'
+  #call convertGamtoTR5(`LINE')
+#enddo
+
+
+.sort
+
+******************
+* vim: syntax=form
+******************

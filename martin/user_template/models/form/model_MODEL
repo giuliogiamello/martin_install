@@ -1,0 +1,183 @@
+*******************************************************************
+* Copyright (C) 2009-2020 Joachim Brod, Emmanuel Stamou
+*
+* This file is part of MaRTIn.
+*
+* MaRTIn is lisenced under GPLv3. For further details see the AUTHORS
+* file in the main MaRTIn directory.
+*******************************************************************
+
+*--#[ DEF :
+*--#] DEF :
+
+*--#[ POLARIZATION :
+*--#] POLARIZATION :
+
+*--#[ GROUPTHEORY :
+*--#] GROUPTHEORY :
+
+*--#[ INSERTPROPAGATORS :
+*--#] INSERTPROPAGATORS :
+
+*--#[ INSERTVERTICES :
+*--#] INSERTVERTICES :
+
+*--#[ INSERTFERMIONVERTICES :
+*--#] INSERTFERMIONVERTICES :
+
+*--#[ FF :
+*--#] FF :
+
+*--#[ VERTICES :
+*--#] VERTICES :
+
+***************************
+*** VV generic vertices ***
+***************************
+*--#[ VVgenCOUP :
+*--#] VVgenCOUP :
+
+*--#[ vVVgenCOUP1 :
+*--#] vVVgenCOUP1 :
+
+*--#[ vVVgenCOUP2 :
+*--#] vVVgenCOUP2 :
+
+*--#[ vVVgenCOUP3 :
+*--#] vVVgenCOUP3 :
+
+***************************
+*** SS generic vertices ***
+***************************
+*--#[ SSgenCOUP :
+*--#] SSgenCOUP :
+
+*--#[ vSSgenCOUP1 :
+*--#] vSSgenCOUP1 :
+
+*--#[ vSSgenCOUP2 :
+*--#] vSSgenCOUP2 :
+
+
+***************************
+*** VS generic vertices ***
+***************************
+*--#[ VSgenCOUP :
+*--#] VSgenCOUP :
+
+*--#[ vVSgenCOUP1 :
+*--#] vVSgenCOUP1 :
+
+
+****************************
+*** VVV generic vertices ***
+****************************
+*--#[ VVVgenCOUP :
+*--#] VVVgenCOUP :
+
+*--#[ vVVVgenCOUP :
+*--#] vVVVgenCOUP :
+
+
+****************************
+*** SVV generic vertices ***
+****************************
+*--#[ SVVgenCOUP :
+*--#] SVVgenCOUP :
+
+*--#[ vSVVgenCOUP :
+*--#] vSVVgenCOUP :
+
+
+****************************
+*** SSS generic vertices ***
+****************************
+*--#[ SSSgenCOUP :
+*--#] SSSgenCOUP :
+
+*--#[ vSSSgenCOUP :
+*--#] vSSSgenCOUP :
+
+*****************************
+*** SSSS generic vertices ***
+*****************************
+*--#[ SSSSgenCOUP :
+*--#] SSSSgenCOUP :
+
+*--#[ vSSSSgenCOUP :
+*--#] vSSSSgenCOUP :
+
+*****************************
+*** VVSS generic vertices ***
+*****************************
+*--#[ VVSSgenCOUP :
+*--#] VVSSgenCOUP :
+
+*--#[ vVVSSgenCOUP :
+*--#] vVVSSgenCOUP :
+
+*****************************
+*** VVVV generic vertices ***
+*****************************
+*--#[ VVVVgenCOUP :
+*--#] VVVVgenCOUP :
+
+*--#[ vVVVVgenCOUP :
+*--#] vVVVVgenCOUP :
+
+****************************
+*** VSS generic vertices ***
+****************************
+*--#[ VSSgenCOUP :
+*--#] VSSgenCOUP :
+
+*--#[ vVSSgenCOUP :
+*--#] vVSSgenCOUP :
+
+******************************************
+*** VGG (ghost ghost) generic vertices ***
+******************************************
+*--#[ VGGgenCOUP :
+*--#] VGGgenCOUP :
+
+*--#[ vVGGgenCOUP :
+*--#] vVGGgenCOUP :
+
+
+*--#[ VVCOUP :
+*--#] VVCOUP :
+
+*--#[ VVACOUPV :
+*--#] VVACOUPV :
+
+*--#[ VVACOUPL :
+*--#] VVACOUPL :
+
+*--#[ VVACOUPR :
+*--#] VVACOUPR :
+
+*--#[ SCOUPV :
+*--#] SCOUPV :
+
+*--#[ SACOUPV :
+*--#] SACOUPV :
+
+*--#[ SACOUPLV :
+*--#] SACOUPLV :
+
+*--#[ SACOUPLM :
+*--#] SACOUPLM :
+
+*--#[ SACOUPRV :
+*--#] SACOUPRV :
+
+*--#[ SACOUPRM :
+*--#] SACOUPRM :
+
+*--#[ AMASSES :
+*--#] AMASSES :
+
+*--#[ INSERTCOUPLINGS :
+*--#] INSERTCOUPLINGS :
+
+* vim: syntax=form

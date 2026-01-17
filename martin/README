@@ -1,0 +1,12 @@
+Massive Recursive Tensor Integration (MaRTIn) is a bundle 
+of programs to automate the evaluation of Feynman diagrams.
+It is being developed by Joachim Brod and Emmanuel Stamou 
+since 2009.
+
+Copyright (C) 2009-2024 Joachim Brod, Lorenz Hüdepohl, Emmanuel Stamou, Tom Steudtner
+
+Authors: Joachim Brod, Lorenz Hüdepohl, Emmanuel Stamou, Tom Steudtner
+
+MaRTIn is licensed under the GNU GENERAL PUBLIC LICENSE Version 3
+(GPLv3). For details on the license see the file COPYING in the main 
+MaRTIn directory.

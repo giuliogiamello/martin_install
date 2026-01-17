@@ -1,0 +1,27 @@
+**************************************************
+*** contract e_ tensors with themselves and ******
+*** with metric tensors. 4d **********************
+**************************************************
+repeat;
+  id e_(mu1?,mu2?,mu3?,mu4?)*e_(mu1?,mu2?,mu3?,mu4?) =
+       + 6*d_(tempmu,tempmu) - 11*(d_(tempmu,tempmu))^2 + 6*(d_(tempmu,tempmu))^3 - (d_(tempmu,tempmu))^4;
+  
+  id e_(mu1?,mu2?,mu3?,mu4?)*e_(mu5?,mu2?,mu3?,mu4?) = 
+       + d_(mu1,mu5) * ( 6 - 11*d_(tempmu,tempmu) + 6*(d_(tempmu,tempmu))^2 - (d_(tempmu,tempmu))^3 );
+
+  id e_(mu1?,mu2?,mu3?,mu4?)*e_(mu5?,mu6?,mu3?,mu4?) =
+       - d_(mu1,mu5)*d_(mu2,mu6) * ( 6 - 5*d_(tempmu,tempmu) + (d_(tempmu,tempmu))^2 )
+       + d_(mu1,mu6)*d_(mu2,mu5) * ( 6 - 5*d_(tempmu,tempmu) + (d_(tempmu,tempmu))^2 );
+
+  id e_(mu1?,mu2?,mu3?,mu4?)*e_(mu5?,mu6?,mu7?,mu4?) =
+       + d_(mu1,mu5)*d_(mu2,mu6)*d_(mu3,mu7) * ( 3 - d_(tempmu,tempmu) )
+       - d_(mu1,mu5)*d_(mu2,mu7)*d_(mu3,mu6) * ( 3 - d_(tempmu,tempmu) )
+       - d_(mu1,mu6)*d_(mu2,mu5)*d_(mu3,mu7) * ( 3 - d_(tempmu,tempmu) )
+       + d_(mu1,mu6)*d_(mu2,mu7)*d_(mu3,mu5) * ( 3 - d_(tempmu,tempmu) )
+       + d_(mu1,mu7)*d_(mu2,mu5)*d_(mu3,mu6) * ( 3 - d_(tempmu,tempmu) )
+       - d_(mu1,mu7)*d_(mu2,mu6)*d_(mu3,mu5) * ( 3 - d_(tempmu,tempmu) );
+endrepeat;
+
+******************
+* vim: syntax=form
+******************

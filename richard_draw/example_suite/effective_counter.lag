@@ -1,0 +1,19 @@
+[countt,  countt,  +, external; pfunct='Dh',      m='M0']
+[effextQ, effextQ, +, external; pfunct='Dh',      m='M0']
+[effQ1, effQ1,     +;           pfunct='DopSadj', m='M0']
+[effQ2, effQ2,     +;           pfunct='DopSadj', m='M0']
+
+[a,a,+;pfunct='DA',m='M2']
+[fb,fB,-;pfunct='Q',m='M2']
+[fe,fE,-;pfunct='L',m='M2']
+
+[fe,fE,a;vfunct='Feea']
+[fb,fB,a;vfunct='Fbba']
+
+[effQ1, effQ2,  effextQ; vfunct='VQeff']
+[fb, fB, effQ1;          vfunct='VQ1']
+[fe, fE, effQ2;          vfunct='VQ2']
+
+[fb, fB, a, effextQ;     vfunct='VQ3']
+[fb, fB, countt;         vfunct='VCountbb']
+[fb, fB, a, countt;      vfunct='VCountbba']

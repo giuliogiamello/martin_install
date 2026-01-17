@@ -1,0 +1,73 @@
+<prologue>
+<<qgraf>>
+
+<<version>><program><</version>>
+<<input>>
+<command_loop><command_line_loop> <command_data><end><end>
+<back><</input>>
+
+<<diagrams>>
+<diagram>
+  <back>
+<<dia>>
+
+ <<diadata>>
+  <<dianum>><diagram_index><</dianum>>
+  <<numin>><legs_in><</numin>>
+  <<numout>><legs_out><</numout>>
+  <<signsym>><sign><symmetry_factor><</signsym>>
+  <<numprops>><propagators><</numprops>>
+  <<numverts>><vertices><</numverts>>
+  <<loop>><loops><</loop>>
+ <</diadata>>
+
+ <<incoming>>
+  <in_loop><<leg>>
+   <<index>><field_index><</index>>
+   <<field>><field><</field>>
+   <<mom>><momentum><</mom>>
+   <<to>><vertex_index><</to>>
+  <</leg>>
+  <end><back><</incoming>>
+
+ <<outgoing>>
+  <out_loop><<leg>>
+   <<index>><field_index><</index>>
+   <<field>><field><</field>>
+   <<mom>><momentum><</mom>>
+   <<from>><vertex_index><</from>>
+  <</leg>>
+  <end><back><</outgoing>>
+
+ <<propagators>>
+  <propagator_loop><<propagator>>
+   <<index>><propagator_index><</index>>
+   <<mom>><momentum><</mom>>
+   <<field>><field><</field>>
+   <<antifield>><dual-field><</antifield>>
+   <<from>><dual-vertex_index><</from>>
+   <<to>><vertex_index><</to>>
+   <<from_index>><dual-field_index><</from_index>>
+   <<to_index>><field_index><</to_index>>
+  <</propagator>>
+  <end><back><</propagators>>
+
+ <<vertices>>
+  <vertex_loop><<vertex>>
+   <<index>><vertex_index><</index>>   
+   <<type>><ray_loop><field>,<end><back><</type>>
+   <<fields>><ray_loop><field_index>,<end><back><</fields>>
+   <<momenta>><ray_loop><momentum>,<end><back><</momenta>>
+   <<vfunct>>[vfunct]<</vfunct>>
+  <</vertex>>
+  <end><back><</vertices>>
+
+<</dia>>
+<epilogue>
+
+<</diagrams>>
+
+<<totaldia>><diagram_index><</totaldia>>
+
+<</qgraf>>
+<exit>

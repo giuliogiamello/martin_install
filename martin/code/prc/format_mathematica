@@ -1,0 +1,25 @@
+* Rewrite our notation in a Mathematica friendly manner
+
+id d_(uu1?,uu2?) = dd(uu1,uu2);
+
+id i_ = I ;
+id pi^aa? = Pi^aa;
+id e_(uu1?,uu2?,uu3?,uu4?) = epsilontensor(uu1,uu2,uu3,uu4);
+#do i = 1,10;
+  id q`i'(uu1?) = qq`i'(uu1);
+#enddo
+
+id v1?.v2? = SPform(v1,v2);
+argument;
+  id v1?.v2? = SPform(v1,v2);
+  argument;
+    id v1?.v2? = SPform(v1,v2);
+  endargument;
+endargument;
+
+id dummyf1?spinorFs(?a)*DIRAC(aa?,?b)*dummyf2?spinorFs(?c) = MathDirac(dummyf1(?a),?b,dummyf2(?c));
+id MathDirac(dummyf1?spinorFs(?a),one,dummyf2?spinorFs(?c)) = MathDirac(dummyf1(?a),dummyf2(?c));
+
+format mathematica;
+
+* vim: syntax=form

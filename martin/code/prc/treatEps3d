@@ -1,0 +1,60 @@
+*******************************************************************
+* Copyright (C) 2009-2023 Joachim Brod, Emmanuel Stamou
+*
+* This file is part of MaRTIn.
+*
+* MaRTIn is lisenced under GPLv3. For further details see the AUTHORS
+* file in the main MaRTIn directory.
+*******************************************************************
+
+*******************************************************************
+* Epsilon tensors                                                 *
+*******************************************************************
+
+exit "Check this before using";
+
+* it is not obvious whether to contract the epsilon tensors
+* as if the indices within are d- or 3-dimensional. You may
+* think its probably consistent to contract in 3, but some
+* of them came from gam_i gam_j -> g_ij -i eps_ijk gam_k
+* and the resulting even traces have probably been computed
+* in d and not 3 dimensions. So caution is adviced.
+
+#ifdef `DIMRED'
+*  contract epsilon tensors as if indices were
+*  3-dimensional and not d-dimensional.
+   repeat;
+
+   id e_(uu1?, uu2?, uu3?) * e_(uu1?, uu2?, uu3?) = + 6;
+
+   id e_(uu1?, uu2?, uu3?) * e_(uu4?, uu2?, uu3?) = + 2*d_(uu1,uu4);
+
+   id e_(uu1?, uu2?, uu3?) * e_(uu4?, uu5?, uu3?) = + d_(uu1,uu4)*d_(uu2,uu5)
+                                                    - d_(uu1,uu5)*d_(uu2,uu4);
+
+   id e_(uu1?, uu2?, uu3?) * e_(uu4?, uu5?, uu6?) = + d_(uu1,uu4)*d_(uu2,uu5)*d_(uu3,uu6)
+                                                    - d_(uu1,uu4)*d_(uu2,uu6)*d_(uu3,uu5)
+                                                    - d_(uu1,uu5)*d_(uu2,uu4)*d_(uu3,uu6)
+                                                    + d_(uu1,uu5)*d_(uu2,uu6)*d_(uu3,uu4)
+                                                    + d_(uu1,uu6)*d_(uu2,uu4)*d_(uu3,uu5)
+                                                    - d_(uu1,uu6)*d_(uu2,uu5)*d_(uu3,uu4);
+   endrepeat;
+#else
+  contract;
+#endif
+
+id e_(uu1?, uu2?, uu3?) = dummyta(uu1, uu2, uu3);
+
+#do LINE = 1,`$nol'
+   id g_(`LINE', uu1?) = dummynt(uu1);
+   id dummyta(uu1?, uu2?, uu3?) * dummynt(uu3?) = -i_*(d_(uu1, uu2) - dummynt(uu1)*dummynt(uu2));
+   id dummynt(uu1?) = g_(`LINE', uu1);
+#enddo
+
+id dummyta(uu1?, uu2?, uu3?) = e_(uu1, uu2, uu3);
+
+if ( match(e_(uu1?, uu2?, uu3?)) ) exit "No epsilon tensor should be here.";
+
+******************
+* vim: syntax=form
+******************

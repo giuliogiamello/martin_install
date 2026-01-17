@@ -1,0 +1,18 @@
+output = 'diagrams.dat' ;
+
+style = '../../richard_draw.sty' ;
+
+model = '../effective_counter.lag' ;
+
+in = fb[q1],fB[q2],effextQ[qc];
+
+out = fe[q3],fE[q4];
+
+loops = 1 ;
+
+loop_momentum = p ;
+
+options = onshell;
+
+true = iprop[effQ1,effQ2,0,2];
+false = iprop[effQ1,effQ2,1,1];

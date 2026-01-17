@@ -1,0 +1,18 @@
+output = 'diagrams.dat' ;
+
+style = '../../richard_draw.sty' ;
+
+model = '../standardmodel.lag' ;
+
+in = fb[k3];
+
+out = fb[q1];
+
+loops = 1 ;
+
+loop_momentum = p ;
+
+options = onshell;
+
+true = iprop[fb, h, 2,2];
+*true = bridge[fb, h, 0,0];

@@ -1,0 +1,143 @@
+*******************************************************************
+* Copyright (C) 2009-2020 Joachim Brod, Emmanuel Stamou
+*
+* This file is part of MaRTIn.
+*
+* MaRTIn is lisenced under GPLv3. For further details see the AUTHORS
+* file in the main MaRTIn directory.
+*******************************************************************
+
+*** cancel momenta from numerator.
+#do m = 1,1
+
+* p1.p2 ***********************************************************
+repeat;
+  id once Intpm(p1,p2,M?)*p1.p2 = -1/2 +1/2*Intpm(p1,p2,M)*(p1.p1 + p2.p2 - M^2);
+endrepeat;
+
+*** Use symmetry property of two-loop integral
+#if ( `LOOP' == 2 )
+   if (
+       ( count(p1.p2,1) != multipleof(2)  ) &&
+       ( count(p1.p2,1) > 0               ) &&
+       ( match(Intpm(p1,p2,M?!{,0})) == 0 )
+   ) discard;
+#endif
+
+*** Replace remaining occurrences of p1.p2 in the numerator *******
+if (
+      ( match(Intpm(p1,M?!{,0})) != 0 ) &&
+      ( match(Intpm(p2,M?!{,0})) != 0 ) &&
+      ( match(Intpm(p1,p2,M?!{,0})) == 0 ) &&
+      ( match(Intpm(p1,p2,0)) == 0)
+   );
+
+   id p1.p2^xx1?{>0} = fac_(xx1)*invfac_(xx1/2)/4^(xx1/2)*
+                       GAMMAINV(`DIMENSION'/2+xx1/2,-ep)*
+                       GAMMA(`DIMENSION'/2,-ep)*(p1.p1)^(xx1/2)*(p2.p2)^(xx1/2);
+endif;
+
+if (
+      ( match(Intpm(p1,M?!{,0})) != 0) &&
+      ( match(Intpm(p2,0)) > 0) &&
+      ( match(Intpm(p1,p2,M?!{,0})) == 0) &&
+      ( match(Intpm(p1,p2,0)) == 0)
+   );
+
+   id p1.p2^xx1?{>0} = 0;
+endif;
+
+if (
+      ( match(Intpm(p2,M?!{,0})) != 0) &&
+      ( match(Intpm(p1,0)) > 0) &&
+      ( match(Intpm(p1,p2,M?!{,0})) == 0) &&
+      ( match(Intpm(p1,p2,0)) == 0)
+   );
+
+      id p1.p2^xx1?{>0} = 0;
+endif;
+
+* * tadpole case (2loop specific) redundant, it is done again below
+* if (
+*       ( match(Intpm(p1,p2,M?!{,0})) == 0) &&
+*       ( match(Intpm(p1,   M?!{,0})) == 0) &&
+*       ( match(Intpm(p2,   M?!{,0})) == 0) &&
+*       ( match(p1.p2^xx1?{>0}))
+*    );
+*   discard;
+* endif;
+
+* p1 **************************************************************
+repeat;
+  id once Intpm(p1,0)*p1.p1 = 1;
+endrepeat;
+
+repeat;
+  id once Intpm(p1,M?)*p1.p1 = 1 + Intpm(p1,M)*M^2;
+endrepeat;
+
+* p2 **************************************************************
+repeat;
+  id once Intpm(p2,0)*p2.p2 = 1;
+endrepeat;
+
+repeat;
+  id once Intpm(p2,M?)*p2.p2 = 1 + Intpm(p2,M)*M^2;
+endrepeat;
+
+*** Treat vanishing terms *****************************************
+if ( match(Intpm(?a)) == 0);
+   id p1.p1 = 0;
+   id p2.p2 = 0;
+   id p1.p2 = 0;
+endif;
+
+*** change variables of integration if necessary ******************
+if (
+     ( match(Intpm(p1,M?)) != 0) &&
+     ( match(Intpm(p2,M?)) == 0)
+   );
+  id Intpm(p1,p2,M?) = Intpm(p2,M);
+  id p2 = p2+p1;
+endif;
+
+if (
+     ( match(Intpm(p1,M?)) == 0) &&
+     ( match(Intpm(p2,M?)) != 0)
+   );
+  id Intpm(p1,p2,M?) = Intpm(p1,M);
+  id p1 = p1+p2;
+endif;
+
+if ((count(p1+d,1) != 0) || (count(p2+d,1) != 0) || (count(p3+d,1) !=0)) redefine m "0";
+.sort
+
+#enddo
+
+*** Treat massless tadpoles ***************************************
+if (
+     ( match(Intpm(?a,M?!{,0})) == 0) &&
+     (
+       ( match(Intpm(p1,0)) != 0)    ||
+       ( match(Intpm(p2,0)) != 0)    ||
+       ( match(Intpm(p1,p2,0)) != 0)
+     )
+   ) discard;
+
+if (
+     ( match(Intpm(p1,p2,M?)) == 0) &&
+     (
+       ( (match(Intpm(p1,0)) != 0)  && (match(Intpm(p1,M?!{,0})) == 0))    ||
+       ( (match(Intpm(p2,0)) != 0)  && (match(Intpm(p2,M?!{,0})) == 0))
+     )
+   ) discard;
+
+#if (`LOOP' == 2)
+  if ((match(Intpm(p1,M?)) == 0) && (match(Intpm(p2,   M?)) == 0)) discard;
+  if ((match(Intpm(p1,M?)) == 0) && (match(Intpm(p1,p2,M?)) == 0)) discard;
+  if ((match(Intpm(p2,M?)) == 0) && (match(Intpm(p1,p2,M?)) == 0)) discard;
+#endif
+
+******************
+* vim: syntax=form
+******************

@@ -1,0 +1,348 @@
+*******************************************************************
+* Copyright (C) 2009-2023 Joachim Brod, Emmanuel Stamou
+*
+* This file is part of MaRTIn.
+*
+* MaRTIn is lisenced under GPLv3. For further details see the AUTHORS
+* file in the main MaRTIn directory.
+*******************************************************************
+
+splitarg Deno;
+
+********************************************************************
+* Vanishing external momenta:                                      *
+*                                                                  *
+* Intpm(p1,p2,M) is defined as 1/((p1-p2)^2 - M^2). So for         *
+* Deno(p1,p2,Mi) = Deno(-p1,-p2,Mi) change variable of integration *
+* p2 -> -p2, or p1 -> -p1.                                         *
+********************************************************************
+
+#if (`LOOP' == 2)
+
+  if (match(Deno(p1,p2,M?)));
+    multiply, replace_(p2,-p2);
+  endif;
+
+  if (match(Deno(-p1,-p2,M?)));
+    multiply, replace_(p1,-p1);
+  endif;
+
+#endif
+
+id Deno(0,M?) = -1/M^2;
+
+id Deno(+p?pint,M?) = Intpm(p,M);
+id Deno(-p?pint,M?) = Intpm(p,M);
+
+id Deno(-p1?pint,+p2?pint,M?) = Intpm(p1,p2,M);
+id Deno(+p1?pint,-p2?pint,M?) = Intpm(p1,p2,M);
+
+id Intpm(p2,p1,M?) = Intpm(p1,p2,M);
+
+if (count(Deno,1) != 0) exit "This is prc/integrate, `DIA': some Denos are not replaced";
+
+*******************************************************************
+* "Passarino-Veltmann"                                            *
+*******************************************************************
+* Here powers of integration momenta in the numerator are expressed
+* in terms of the denominator and so removed from the expression. *
+*                                                                 *
+* Use antisymmetry in one-loop case                               *
+*******************************************************************
+
+#include cancelmomenta
+#include canceltadpoles
+
+* The following line might be redundant:
+if (count(p1,1,p2,1,p3,1) != multipleof(2)) discard;
+
+* The numerator should now be free of loop momenta.
+
+if ((count(p1,1) != 0) || (count(p2,1) != 0) ||count(p3,1))
+  exit "This is prc/integrate, `DIA': momenta in numerator after Passarino-Veltman";
+
+********************************************************************
+* Integrate                                                        *
+********************************************************************
+
+* First we perform partial fractioning. Then only up to three masses
+* appear in each term.
+
+*** Partial fractioning with massless propagators.
+repeat id Intpm(?a,0)*Intpm(?a,M?!{,0}) = Intpm(?a,M)/M^2 - Intpm(?a,0)/M^2;
+
+*** Partial fractioning with massive propagators.
+repeat id Intpm(?a,M1?)*Intpm(?a,M2?!{M1?}) = Intpm(?a,M1)/(M1^2-M2^2) - Intpm(?a,M2)/(M1^2-M2^2);
+
+#include canceltadpoles
+
+
+* Two-loop recursion etc. is only necessary for two-loop diagrams.
+#if (`LOOP' == 2)
+
+********************************************************************
+* Now we introduce a new notation for genuine two-loop integrals.
+* IntDT is a Davydychev-Tausk-type integral (Nucl.Phys. B397 123-142)
+* IntBMU is a Bobeth-Misiak-Urban-type integral (hep-ph/9910220).
+********************************************************************
+
+* 1. Davydychev-Tausk:
+
+if (
+     match(Intpm(p1,M1?!{,0})) &&
+     match(Intpm(p2,M2?!{,0})) &&
+     match(Intpm(p1,p2,M3?!{,0}))
+     );
+
+  id Intpm(p1,M1?!{,0}) = Intpm(p1,M1)*cp1;
+  id Intpm(p2,M1?!{,0}) = Intpm(p2,M1)*cp2;
+  id Intpm(p1,p2,M1?!{,0}) = Intpm(p1,p2,M1)*cp12;
+
+  id once Intpm(p1,M1?!{,0}) = IntDT(M1);
+  id once Intpm(p2,M1?!{,0})*IntDT(?a) = IntDT(?a,M1);
+  id once Intpm(p1,p2,M1?!{,0})*IntDT(?a) = IntDT(?a,M1);
+
+  id cp1^xx1?*cp2^xx2?*cp12^xx3?*IntDT(?a) = IntDT(xx1,xx2,xx3,?a);
+
+  id Intpm(p1,M1?!{,0}) = 1;
+  id Intpm(p2,M1?!{,0}) = 1;
+  id Intpm(p1,p2,M1?!{,0}) = 1;
+endif;
+
+* 2. Bobeth-Misiak-Urban:
+if (
+     match(Intpm(p1,M1?)) &&
+     match(Intpm(p2,M2?)) &&
+     match(Intpm(p1,p2,M3?))
+     );
+
+  id Intpm(p1,M1?) = Intpm(p1,M1)*cp1;
+  id Intpm(p2,M1?) = Intpm(p2,M1)*cp2;
+  id Intpm(p1,p2,M1?) = Intpm(p1,p2,M1)*cp12;
+
+  id once Intpm(p1,M1?) = IntBMU(M1);
+  id once Intpm(p2,M1?)*IntBMU(?a) = IntBMU(?a,M1);
+  id once Intpm(p1,p2,M1?)*IntBMU(?a) = IntBMU(?a,M1);
+
+  id cp1^xx1?*cp2^xx2?*cp12^xx3?*IntBMU(?a) = IntBMU(xx1,xx2,xx3,?a);
+
+  id Intpm(p1,M1?) = 1;
+  id Intpm(p2,M1?) = 1;
+  id Intpm(p1,p2,M1?) = 1;
+endif;
+
+.sort
+
+*******************************************************************
+* Recursion Relations                                             *
+*******************************************************************
+*                                                                 *
+* First integrals with mass zero are treated. Then purely         *
+* massive Integrals can be treated.                               *
+*                                                                 *
+*******************************************************************
+*******************************************************************
+
+* First we bring Integrals with two equal masses into a standard form,
+* which is evaluated directly (indicated by "d").
+
+id IntBMU(xx1?,xx2?,xx3?,0,M1?,M1?) = IntBMUd(xx3,xx2,xx1,M1,M1,0);
+id IntBMU(xx1?,xx2?,xx3?,M1?,0,M1?) = IntBMUd(xx1,xx3,xx2,M1,M1,0);
+id IntBMU(xx1?,xx2?,xx3?,M1?,M1?,0) = IntBMUd(xx1,xx2,xx3,M1,M1,0);
+
+id IntBMU(xx1?,xx2?,xx3?,0,0,M1?) = IntBMUd(xx3,xx2,xx1,M1,0,0);
+id IntBMU(xx1?,xx2?,xx3?,0,M1?,0) = IntBMUd(xx2,xx1,xx3,M1,0,0);
+id IntBMU(xx1?,xx2?,xx3?,M1?,0,0) = IntBMUd(xx1,xx2,xx3,M1,0,0);
+
+* Treat massless tadpoles
+
+id IntBMUd(xx1?,0,0,0,M?,M?) = 0;
+id IntBMUd(0,xx1?,0,M?,0,M?) = 0;
+id IntBMUd(0,0,xx1?,M?,M?,0) = 0;
+
+id IntBMUd(xx1?,xx2?,0,M1?,0,M2?) = 0;
+id IntBMUd(xx1?,xx2?,0,0,M1?,M2?) = 0;
+id IntBMUd(xx1?,0,xx2?,0,M1?,M2?) = 0;
+id IntBMUd(xx1?,0,xx2?,M1?,M2?,0) = 0;
+id IntBMUd(0,xx1?,xx2?,M1?,M2?,0) = 0;
+id IntBMUd(0,xx1?,xx2?,M1?,0,M2?) = 0;
+
+* Now the recursion relations.
+
+id IntBMU(xx1?,xx2?,xx3?,0,M2?,M3?) = IntBMU(xx3,xx2,xx1,M3,M2,0);
+id IntBMU(xx1?,xx2?,xx3?,M1?,0,M3?) = IntBMU(xx1,xx3,xx2,M1,M3,0);
+
+
+#do m = 1,1
+
+b IntBMU;
+.sort
+Keep Brackets;
+
+id IntBMU(xx1?{>1},xx2?{>0},xx3?{>0},M1?,M2?,0) = 1/(xx1 - 1)/(M1^2 - M2^2)*(
+		+ (
+                   nom(`DIMENSION',-2)
+                   - xx1 + 1 - xx2 - xx3 + M2^2/M1^2*(xx1 - 1 - xx3)
+                  )*IntBMU(xx1-1,xx2,xx3,M1,M2,0)
+                + M2^2/M1^2*xx2*(IntBMU(xx1-2,xx2+1,xx3,M1,M2,0) - IntBMU(xx1-1,xx2+1,xx3-1,M1,M2,0)));
+
+id IntBMU(xx1?{>0},xx2?{>1},xx3?{>0},M1?,M2?,0) = -(M1^2/M2^2)/(xx2 - 1)/(M1^2 - M2^2)*(
+		+ ( M2^2/M1^2*(
+                   nom(`DIMENSION',-2)
+                   - xx1 - xx2 + 1 - xx3
+                   )+ xx2 - 1 - xx3)*IntBMU(xx1,xx2-1,xx3,M1,M2,0)
+                + xx1*(IntBMU(xx1+1,xx2-2,xx3,M1,M2,0) - IntBMU(xx1+1,xx2-1,xx3-1,M1,M2,0)));
+
+id IntBMU(xx1?{>0},xx2?{>0},xx3?{>1},M1?,M2?,0) = M1^2/(xx3 - 1)/(M1^2 - M2^2)^2*(
+		+ ((1 + M2^2/M1^2)*
+                   (-1)*nom(`DIMENSION',-2)
+                   + 2*xx2 + (1 + 3*M2^2/M1^2)*(xx3-1)
+                    )*IntBMU(xx1,xx2,xx3-1,M1,M2,0)
+                + 2*M2^2/M1^2*xx2*(IntBMU(xx1,xx2+1,xx3-2,M1,M2,0) - IntBMU(xx1-1,xx2+1,xx3-1,M1,M2,0))
+                + (1 - M2^2/M1^2)*(xx3-1)*(IntBMU(xx1,xx2-1,xx3,M1,M2,0) - IntBMU(xx1-1,xx2,xx3,M1,M2,0)));
+
+* masses?
+*** massless tadpoles ***
+
+id IntBMU(xx1?,0,0,0,M?,M?) = 0;
+id IntBMU(0,xx1?,0,M?,0,M?) = 0;
+id IntBMU(0,0,xx1?,M?,M?,0) = 0;
+
+id IntBMU(xx1?,xx2?,0,M1?,0,M2?) = 0;
+id IntBMU(xx1?,xx2?,0,0,M1?,M2?) = 0;
+id IntBMU(xx1?,0,xx2?,0,M1?,M2?) = 0;
+id IntBMU(xx1?,0,xx2?,M1?,M2?,0) = 0;
+id IntBMU(0,xx1?,xx2?,M1?,M2?,0) = 0;
+id IntBMU(0,xx1?,xx2?,M1?,0,M2?) = 0;
+
+*** products of one-loop integrals ***
+
+id IntBMU(xx1?,0,0,M1?,M?,M?) = Intpm(p1,M1)^xx1;
+id IntBMU(0,xx1?,0,M?,M1?,M?) = Intpm(p1,M1)^xx1;
+id IntBMU(0,0,xx1?,M?,M?,M1?) = Intpm(p1,M1)^xx1;
+
+id IntBMU(xx1?,xx2?,0,M1?,M2?,M?) = Intpm(p1,M1)^xx1*Intpm(p2,M2)^xx2;
+id IntBMU(xx1?,0,xx2?,M1?,M?,M2?) = Intpm(p1,M1)^xx1*Intpm(p2,M2)^xx2;
+id IntBMU(0,xx1?,xx2?,M?,M1?,M2?) = Intpm(p2,M1)^xx1*Intpm(p1,M2)^xx2;
+
+if (   (match(IntBMU(xx1?{>1},xx2?,xx3?,M1?,M2?,M3?)))
+    || (match(IntBMU(xx1?,xx2?{>1},xx3?,M1?,M2?,M3?)))
+    || (match(IntBMU(xx1?,xx2?,xx3?{>1},M1?,M2?,M3?)))  ) redefine m "0";
+
+.sort
+
+#enddo
+
+
+*********************************************
+
+#do m = 1,1
+
+b IntDT;
+.sort
+Keep Brackets;
+
+* Delta(M1,M2,M3) = 2 (M1^2 M2^2 + M1^2 M3^2 + M2^2 M3^2) - (M1^4 + M2^4 + M3^4)
+
+id IntDT(xx1?{>1},xx2?,xx3?,M1?,M2?,M3?) = ((xx2*(M1^2-M3^2)*(M1^2-M2^2+M3^2)
+			 +xx3*(M1^2-M2^2)*(M1^2+M2^2-M3^2)
+                         +nom(`DIMENSION',-2)*
+                         M1^2*(-M1^2+M2^2+M3^2)
+			 -(xx1-1)*Delta(M1^2,M2^2,M3^2))*IntDT(xx1-1,xx2,xx3,M1,M2,M3)
+			 +xx2*M2^2*(M1^2-M2^2+M3^2)*(IntDT(xx1-1,xx2+1,xx3-1,M1,M2,M3)
+                                                    -IntDT(xx1-2,xx2+1,xx3,M1,M2,M3))
+			 +xx3*M3^2*(M1^2+M2^2-M3^2)*(IntDT(xx1-1,xx2-1,xx3+1,M1,M2,M3)
+                                                    -IntDT(xx1-2,xx2,xx3+1,M1,M2,M3)))
+                         /((xx1-1)*M1^2)*invDelta(M1^2,M2^2,M3^2);
+;
+
+id IntDT(xx1?,0,0,M1?,M?,M?) = Intpm(p1,M1)^xx1;
+id IntDT(0,xx1?,0,M?,M1?,M?) = Intpm(p1,M1)^xx1;
+id IntDT(0,0,xx1?,M?,M?,M1?) = Intpm(p1,M1)^xx1;
+
+id IntDT(xx1?,xx2?,0,M1?,M2?,M?) = Intpm(p1,M1)^xx1*Intpm(p2,M2)^xx2;
+id IntDT(xx1?,0,xx2?,M1?,M?,M2?) = Intpm(p1,M1)^xx1*Intpm(p2,M2)^xx2;
+id IntDT(0,xx1?,xx2?,M?,M1?,M2?) = Intpm(p2,M1)^xx1*Intpm(p1,M2)^xx2;
+
+b IntDT;
+.sort
+Keep Brackets;
+
+id IntDT(xx1?,xx2?{>1},xx3?,M1?,M2?,M3?) = ((xx3*(M2^2-M1^2)*(M2^2-M3^2+M1^2)
+			 +xx1*(M2^2-M3^2)*(M2^2+M3^2-M1^2)
+                         +nom(`DIMENSION',-2)*
+                         M2^2*(-M2^2+M3^2+M1^2)
+			 -(xx2-1)*Delta(M1^2,M2^2,M3^2))*IntDT(xx1,xx2-1,xx3,M1,M2,M3)
+			 +xx3*M3^2*(M2^2-M3^2+M1^2)*(IntDT(xx1-1,xx2-1,xx3+1,M1,M2,M3)
+                                                    -IntDT(xx1,xx2-2,xx3+1,M1,M2,M3))
+			 +xx1*M1^2*(M2^2+M3^2-M1^2)*(IntDT(xx1+1,xx2-1,xx3-1,M1,M2,M3)
+                                                    -IntDT(xx1+1,xx2-2,xx3,M1,M2,M3)))
+                         /((xx2-1)*M2^2)*invDelta(M1^2,M2^2,M3^2);
+;
+
+
+
+id IntDT(xx1?,0,0,M1?,M?,M?) = Intpm(p1,M1)^xx1;
+id IntDT(0,xx1?,0,M?,M1?,M?) = Intpm(p1,M1)^xx1;
+id IntDT(0,0,xx1?,M?,M?,M1?) = Intpm(p1,M1)^xx1;
+
+id IntDT(xx1?,xx2?,0,M1?,M2?,M?) = Intpm(p1,M1)^xx1*Intpm(p2,M2)^xx2;
+id IntDT(xx1?,0,xx2?,M1?,M?,M2?) = Intpm(p1,M1)^xx1*Intpm(p2,M2)^xx2;
+id IntDT(0,xx1?,xx2?,M?,M1?,M2?) = Intpm(p2,M1)^xx1*Intpm(p1,M2)^xx2;
+
+b IntDT;
+.sort
+Keep Brackets;
+
+id IntDT(xx1?,xx2?,xx3?{>1},M1?,M2?,M3?) = ((xx1*(M3^2-M2^2)*(M3^2-M1^2+M2^2)
+			 +xx2*(M3^2-M1^2)*(M3^2+M1^2-M2^2)
+                         +nom(`DIMENSION',-2)*
+                          M3^2*(-M3^2+M1^2+M2^2)
+			 -(xx3-1)*Delta(M1^2,M2^2,M3^2))*IntDT(xx1,xx2,xx3-1,M1,M2,M3)
+			 +xx1*M1^2*(M3^2-M1^2+M2^2)*(IntDT(xx1+1,xx2-1,xx3-1,M1,M2,M3)
+                                                    -IntDT(xx1+1,xx2,xx3-2,M1,M2,M3))
+			 +xx2*M2^2*(M3^2+M1^2-M2^2)*(IntDT(xx1-1,xx2+1,xx3-1,M1,M2,M3)
+                                                    -IntDT(xx1,xx2+1,xx3-2,M1,M2,M3)))
+                         /((xx3-1)*M3^2)*invDelta(M1^2,M2^2,M3^2);
+;
+
+id IntDT(xx1?,0,0,M1?,M?,M?) = Intpm(p1,M1)^xx1;
+id IntDT(0,xx1?,0,M?,M1?,M?) = Intpm(p1,M1)^xx1;
+id IntDT(0,0,xx1?,M?,M?,M1?) = Intpm(p1,M1)^xx1;
+
+id IntDT(xx1?,xx2?,0,M1?,M2?,M?) = Intpm(p1,M1)^xx1*Intpm(p2,M2)^xx2;
+id IntDT(xx1?,0,xx2?,M1?,M?,M2?) = Intpm(p1,M1)^xx1*Intpm(p2,M2)^xx2;
+id IntDT(0,xx1?,xx2?,M?,M1?,M2?) = Intpm(p2,M1)^xx1*Intpm(p1,M2)^xx2;
+
+if (match(IntDT(xx1?{>1},xx2?,xx3?,M1?,M2?,M3?))) redefine m "0";
+if (match(IntDT(xx1?,xx2?{>1},xx3?,M1?,M2?,M3?))) redefine m "0";
+if (match(IntDT(xx1?,xx2?,xx3?{>1},M1?,M2?,M3?))) redefine m "0";
+
+.sort
+#enddo
+
+*** Treat Deltas
+symmetrize Delta;
+symmetrize invDelta;
+
+id Delta(M1?^2,M2?^2,M3?^2)*invDelta(M1?^2,M2?^2,M3?^2) = 1;
+
+id invDelta(M?^2,M?^2,M?^2) = 1/3/M^4;
+
+id Delta(M1?^2,M2?^2,M3?^2) = 2 * (M1^2 * M2^2 + M1^2 * M3^2 + M2^2 * M3^2) - (M1^4 + M2^4 + M3^4) ;
+
+id invDelta(M1?^2,M2?^2,M3?^2) = 1/Delta(M1^2,M2^2,M3^2);
+
+* The following endif corresponds to if LOOP = 2
+#endif
+
+*******************************************************************
+* Insert integrals                                                *
+*******************************************************************
+
+#include insert_integrals
+
+******************
+* vim: syntax=form
+******************
+

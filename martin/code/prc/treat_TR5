@@ -1,0 +1,77 @@
+*******************************************************************
+* Copyright (C) 2009-2023 Joachim Brod, Emmanuel Stamou
+*
+* This file is part of MaRTIn.
+*
+* MaRTIn is lisenced under GPLv3. For further details see the AUTHORS
+* file in the main MaRTIn directory.
+*******************************************************************
+
+*******************************************************************
+* Insert traces for NDRmisiak
+*******************************************************************
+
+exit "This is treat_TR5, check me before proceeding";
+
+*.store
+*g tets = Gam1([D-2ep],p,[D-2ep],uu1,[D-2ep],uu2,[D-2ep],uu3,[D-2ep],p1)*TR52(uu5,G5i,mu1,uu1,uu2,uu3,uu4);
+*sum uu1,uu2,uu3,uu4,uu5;
+*.sort
+
+*************************************************
+*** Substitute traces
+*************************************************
+
+#do CLINE = {`$nol'+1}, `$ncl'
+
+
+if (match(TR5`CLINE'(?x,AnC5i,?y)) == 0);
+
+* test
+  if (match(TR5`CLINE'(G5i,?x,G5i,?y))) exit "How come you have more that one G5 in the Trace?";
+
+* non-dummy indices to the right
+  repeat id TR5`CLINE'(G5i,?x,mu1?!dummyindices_,mu2?dummyindices_,?y) =
+           -TR5`CLINE'(G5i,?x,mu2,mu1,?y)
+           + 2*d_(mu1,mu2)*TR5`CLINE'(G5i,?x,?y);
+
+
+* odd nummber of gammas
+  id TR5`CLINE'(G5i, ?x) = dummycf(nargs_(?x))*TR5`CLINE'(G5i, ?x);
+  id dummycf(aa?odd_)   = 0;
+  id dummycf(aa?even_)  = 1;
+
+
+* implemented cases
+  id TR5`CLINE'(G5i) = 0;
+
+  id TR5`CLINE'(G5i, mu1?,mu2?) = 0;
+
+  #if `$nol' != 0
+  #do OLINE = 1, `$nol'
+    id Gam`OLINE'(?x,[D-2ep],mu1?,?y) * TR5`CLINE'(G5i,mu1?,mu2?,mu3?,mu4?) =
+                      4 * Gam`OLINE'(?x, [D-2ep], mu2, [D-2ep], mu3, [D-2ep], mu4, G5, ?y)
+                     -4 * d_(mu3,mu4) * Gam`OLINE'(?x, [D-2ep], mu2, G5, ?y)
+                     +4 * d_(mu2,mu4) * Gam`OLINE'(?x, [D-2ep], mu3, G5, ?y)
+                     -4 * d_(mu2,mu3) * Gam`OLINE'(?x, [D-2ep], mu4, G5, ?y);
+
+    id Gam`OLINE'(?x,[D-2ep],mu1?,[D-2ep],mu2?,[D-2ep],mu3?,?y) * TR5`CLINE'(G5i,mu1?,mu2?,mu3?,mu4?,mu5?,mu6?) =
+                    -72 * d_(mu5,mu6) * Gam`OLINE'(?x, [D-2ep], mu4, G5, ?y)
+                    +72 * d_(mu4,mu6) * Gam`OLINE'(?x, [D-2ep], mu5, G5, ?y)
+                    -72 * d_(mu4,mu5) * Gam`OLINE'(?x, [D-2ep], mu6, G5, ?y)
+                    +44 * Gam`OLINE'(?x, [D-2ep], mu4, [D-2ep], mu5, [D-2ep], mu6, G5, ?y)
+                    + 4 * Gam`OLINE'(?x, [D-2ep], mu4, [D-2ep], mu6, [D-2ep], mu5, G5, ?y)
+                    - 4 * Gam`OLINE'(?x, [D-2ep], mu5, [D-2ep], mu4, [D-2ep], mu6, G5, ?y)
+                    - 4 * Gam`OLINE'(?x, [D-2ep], mu5, [D-2ep], mu6, [D-2ep], mu4, G5, ?y)
+                    + 4 * Gam`OLINE'(?x, [D-2ep], mu6, [D-2ep], mu4, [D-2ep], mu5, G5, ?y)
+                    + 4 * Gam`OLINE'(?x, [D-2ep], mu6, [D-2ep], mu5, [D-2ep], mu4, G5, ?y);
+  #enddo
+  #endif
+endif;
+.sort
+
+#enddo
+
+*******************
+*# vim: syntax=form
+*******************

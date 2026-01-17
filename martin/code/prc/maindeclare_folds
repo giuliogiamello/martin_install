@@ -1,0 +1,365 @@
+*******************************************************************
+* Copyright (C) 2009-2023 Joachim Brod, Emmanuel Stamou
+*
+* This file is part of MaRTIn.
+*
+* MaRTIn is lisenced under GPLv3. For further details see the AUTHORS
+* file in the main MaRTIn directory.
+*******************************************************************
+
+*********************************************************************
+*** vertex-symbols and vertex-functions *****************************
+*********************************************************************
+
+* Generic vertex functions
+
+cf vertVV,vertSS,vertVS;
+cf vertVVV,vertVVVV,vertSVV,vertVVSS,vertVSS,vertVGG;
+
+*** Model-specific definitions ***
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # DEF
+#enddo
+
+
+******************************************************************
+*** Sets for generating vertices *********************************
+******************************************************************
+*                                                                *
+* depending on the set they appear these functions and their     *
+* corresponding vertices will be treated differently             *
+* the ordering in the sets is important                          *
+*                                                                *
+******************************************************************
+
+cf Ff;
+set fermion:
+Ff,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # FF
+#enddo
+;
+
+s vv;
+set vertices:
+vv,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # VERTICES
+#enddo
+;
+
+******************************************************************
+* the following sets are for the generic vertices
+******************************************************************
+
+***************************
+*** VV generic vertices ***
+***************************
+cf VVgencf;
+set VVgen:
+VVgencf,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # VVgenCOUP
+#enddo
+;
+
+s vVVgen1v;
+set vVVgen1:
+vVVgen1v,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # vVVgenCOUP1
+#enddo
+;
+
+s vVVgen2v;
+set vVVgen2:
+vVVgen2v,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # vVVgenCOUP2
+#enddo
+;
+
+s vVVgen3v;
+set vVVgen3:
+vVVgen3v,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # vVVgenCOUP3
+#enddo
+;
+
+***************************
+*** SS generic vertices ***
+***************************
+cf SSgencf;
+set SSgen:
+SSgencf,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # SSgenCOUP
+#enddo
+;
+
+s vSSgen1v;
+set vSSgen1:
+vSSgen1v,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # vSSgenCOUP1
+#enddo
+;
+
+s vSSgen2v;
+set vSSgen2:
+vSSgen2v,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # vSSgenCOUP2
+#enddo
+;
+
+***************************
+*** VS generic vertices ***
+***************************
+cf VSgencf;
+set VSgen:
+VSgencf,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # VSgenCOUP
+#enddo
+;
+
+s vVSgen1v;
+set vVSgen1:
+vVSgen1v,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # vVSgenCOUP1
+#enddo
+;
+
+****************************
+*** VVV generic vertices ***
+****************************
+cf VVVgencf;
+set VVVgen:
+VVVgencf,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # VVVgenCOUP
+#enddo
+;
+
+s vVVVgenv;
+set vVVVgen:
+vVVVgenv,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # vVVVgenCOUP
+#enddo
+;
+
+****************************
+*** SVV generic vertices ***
+****************************
+cf SVVgencf;
+set SVVgen:
+SVVgencf,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # SVVgenCOUP
+#enddo
+;
+
+s vSVVgenv;
+set vSVVgen:
+vSVVgenv,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # vSVVgenCOUP
+#enddo
+;
+
+****************************
+*** SSS generic vertices ***
+****************************
+cf SSSgencf;
+set SSSgen:
+SSSgencf,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # SSSgenCOUP
+#enddo
+;
+
+s vSSSgenv;
+set vSSSgen:
+vSSSgenv,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # vSSSgenCOUP
+#enddo
+;
+
+*****************************
+*** SSSS generic vertices ***
+*****************************
+cf SSSSgencf;
+set SSSSgen:
+SSSSgencf,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # SSSSgenCOUP
+#enddo
+;
+
+s vSSSSgenv;
+set vSSSSgen:
+vSSSSgenv,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # vSSSSgenCOUP
+#enddo
+;
+
+*****************************
+*** VVSS generic vertices ***
+*****************************
+cf VVSSgencf;
+set VVSSgen:
+VVSSgencf,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # VVSSgenCOUP
+#enddo
+;
+
+s vVVSSgenv;
+set vVVSSgen:
+vVVSSgenv,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # vVVSSgenCOUP
+#enddo
+;
+
+*****************************
+*** VVVV generic vertices ***
+*****************************
+cf VVVVgencf;
+set VVVVgen:
+VVVVgencf,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # VVVVgenCOUP
+#enddo
+;
+
+s vVVVVgenv;
+set vVVVVgen:
+vVVVVgenv,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # vVVVVgenCOUP
+#enddo
+;
+
+****************************
+*** VSS generic vertices ***
+****************************
+cf VSSgencf;
+set VSSgen:
+VSSgencf,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # VSSgenCOUP
+#enddo
+;
+
+s vVSSgenv;
+set vVSSgen:
+vVSSgenv,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # vVSSgenCOUP
+#enddo
+;
+
+******************************************
+*** VGG (ghost ghost) generic vertices ***
+******************************************
+cf VGGgencf;
+set VGGgen:
+VGGgencf,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # VGGgenCOUP
+#enddo
+;
+
+s vVGGgenv;
+set vVGGgen:
+vVGGgenv,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # vVGGgenCOUP
+#enddo
+;
+
+******************************************************************
+* the following sets are for the insertion of the Dirac Algebra.
+*
+* the set vVcoup get replaced by a vector coupling.
+* the set vVAcoup get replaced by a right- and left-handed part.
+
+s vVcoup;
+set Vcoupv:
+vVcoup,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # VVCOUP
+#enddo
+;
+
+********************
+
+s vVAcoup;
+set VAcoupv:
+vVAcoup,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # VVACOUPV
+#enddo
+;
+
+s vVAcoupl;
+set VAcouplv:
+vVAcoupl,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # VVACOUPL
+#enddo
+;
+
+
+s vVAcoupr;
+set VAcouprv:
+vVAcoupr,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # VVACOUPR
+#enddo
+;
+
+********************
+
+s vScoup;
+set Scoupv:
+vScoup,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # SCOUPV
+#enddo
+;
+
+********************
+
+s vSAcoup;
+set SAcoupv:
+vSAcoup,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # SACOUPV
+#enddo
+;
+
+s vSAcoupl;
+set SAcouplv:
+vSAcoupl,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # SACOUPLV
+#enddo
+;
+
+s vSAcoupr;
+set SAcouprv:
+vSAcoupr,
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # SACOUPRV
+#enddo
+;
+
+* vim: syntax=form

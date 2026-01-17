@@ -1,0 +1,95 @@
+*******************************************************************
+* Copyright (C) 2009-2023 Joachim Brod, Emmanuel Stamou
+*
+* This file is part of MaRTIn.
+*
+* MaRTIn is lisenced under GPLv3. For further details see the AUTHORS
+* file in the main MaRTIn directory.
+*******************************************************************
+
+* Introduce DIRAC operators and get rid of dummyindices
+
+* If diracalgebra did everything correctly then all the D-2ep
+* indices are at the front then come the D and then the -2ep.
+* test this before introducing the DIRAC's
+#do LINE = 1,`$nol'
+  if (match(Gam`LINE'(?x,[D],   ?y,[D-2ep],?z))) exit "Gam`LINE' is not ordered";
+  if (match(Gam`LINE'(?x,[-2ep],?y,[D-2ep],?z))) exit "Gam`LINE' is not ordered";
+  if (match(Gam`LINE'(?x,[-2ep],?y,[D],    ?z))) exit "Gam`LINE' is not ordered";
+#enddo
+
+
+*** Remake GamLINE from NDRmisiak traces
+#do LINE = {`$nol'+1}, `$ncl'
+  #call convertTR5toGam(`LINE')
+#enddo
+
+* convert all summed Lorentz indices to fixed indices
+#do i=1,`$nol'
+  id Gam`i'(?x) = Gam`i'(?x) * dummycf(?x);
+#enddo
+id e_(uu1?,uu2?,uu3?,uu4?) = e_(uu1,uu2,uu3,uu4)*dummycf(uu1,uu2,uu3,uu4);
+
+repeat id dummycf(?x,aa?,               ?y) = dummycf(?x,?y);
+repeat id dummycf(?x,p?,                ?y) = dummycf(?x,?y);
+repeat id dummycf(?x,mu0?!dummyindices_,?y) = dummycf(?x,?y);
+id dummycf(?x) = dummycf(nargs_(?x));
+repeat id dummycf(xx1?)*dummycf(xx2?) = dummycf(xx1+xx2);
+id once dummycf(xx1?) = dummycf(xx1/2);
+
+* substitute the dummycf's
+#do i=1,`$nol'
+repeat;
+  id once dummycf(xx1?) *Gam`i'(?x,mu1?dummyindices_,?y,mu1?,     ?z) =
+          dummycf(xx1-1)*Gam`i'(?x,indN[xx1],        ?y,indN[xx1],?z);
+endrepeat;
+#enddo
+
+#do i=1,`$nol'
+repeat;
+  id once dummycf(xx1?) *Gam`i'(?x,mu1?dummyindices_,?y)*e_(mu1?,     mu2?,mu3?,mu4?) = 
+          dummycf(xx1-1)*Gam`i'(?x,indN[xx1],        ?y)*e_(indN[xx1],mu2, mu3, mu4);
+endrepeat;
+#enddo
+
+#do i=1,{`$nol'-1}
+#do j={`i'+1},`$nol'
+repeat;
+  id once dummycf(xx1?) *Gam`i'(?x,mu1?dummyindices_,?y)*Gam`j'(?z,mu1?,     ?w) =
+          dummycf(xx1-1)*Gam`i'(?x,indN[xx1],        ?y)*Gam`j'(?z,indN[xx1],?w);
+endrepeat;
+#enddo
+#enddo
+
+id dummycf(0)=1;
+.sort
+
+*** Create the DIRAC objects
+#do LINE = 1,`$ncl'
+  id Gam`LINE'     = DIRAC(`LINE',one);
+  id Gam`LINE'(?x) = DIRAC(`LINE',?x);
+#enddo
+
+*** Remake TR5 for NDRmisiak traces
+#do m={`$nol'+1},`$ncl'
+  id DIRAC(?x,`m',?y) = DIRAC(?x) * DIRAC(`m',?y);
+#enddo
+
+#do m={`$nol'+1},`$ncl'
+  id DIRAC(`m',?x) = TR5`m'(?x);
+  repeat id TR5`m'([D-2ep],mu1?,?x) = TR5`m'(mu1,?x);
+#enddo
+
+*** Compactify our ordered DIRAC
+repeat id DIRAC(?x,[D],   mu1?,[D],   mu2?,?y) = DIRAC(?x,[D],   mu1,mu2,?y);
+repeat id DIRAC(?x,[-2ep],mu1?,[-2ep],mu2?,?y) = DIRAC(?x,[-2ep],mu1,mu2,?y);
+
+repeat id DIRAC(?x,[D-2ep], ?y) = DIRAC(?x,      ?y);
+repeat id DIRAC(?x,[D],     ?y) = DIRAC(?x,tilde,?y);
+repeat id DIRAC(?x,[-2ep],  ?y) = DIRAC(?x,hat,  ?y);
+
+.sort
+
+******************
+* vim: syntax=form
+******************

@@ -1,0 +1,1179 @@
+*******************************************************************
+* Copyright (C) 2009-2020 Joachim Brod, Emmanuel Stamou
+*
+* This file is part of MaRTIn.
+*
+* MaRTIn is lisenced under GPLv3. For further details see the AUTHORS
+* file in the main MaRTIn directory.
+*******************************************************************
+
+*--#[ DEF :
+*
+
+#define DIMENSION "4"
+
+* Field symbols
+
+s fnue,fNue,fe,fE,fnumu,fNumu,
+  fmu,fMu,fnutau,fNutau,ftau,fTau,
+  fu,fU,fd,fD,fc,fC,fs,fS,ft,fT,fb,fB,
+  g,a,z,wm,wp,h,Gm,Gp,G0,
+  ug,Ug,ua,Ua,uz,Uz,uwp,Uwp,uwm,Uwm;
+
+set smfields: fnue,fNue,fe,fE,fnumu,fNumu,
+  fmu,fMu,fnutau,fNutau,ftau,fTau,
+  fu,fU,fd,fD,fc,fC,fs,fS,ft,fT,fb,fB,
+  g,a,z,wm,wp,h;
+
+set smquarkfield: fu,fd,fc,fs,ft,fb;
+
+set smantiquarkfield: fU,fD,fC,fS,fT,fB;
+
+set smleptonfield: fnue,fe,fnumu,fmu,fnutau,ftau;
+
+set smantileptonfield: fNue,fE,fNumu,fMu,fNutau,fTau;
+
+s su3col;
+
+
+
+s gaugea,gaugeg,gaugew,gaugez;
+s xiqa,xiqg,xiqw,xiqz;
+
+*** constants
+s gs,el,sw,cw,alpha,alphas;
+s Qu,Qd,Qs,Qc,Qb,Qt,Qe,Qmu,Qtau;
+
+*** g_f^+/- ***
+s gep, gem, gnup, gnum, gtp, gtm, gbp, gbm;
+
+cf CKM, CKMs;
+
+* Masses
+
+s Mtau,Mmu,Melectron,
+  Mtop,Mbottom,Mcharm,Mstrange,Mup,Mdown,
+  Mhiggs,MW,MZ;
+
+* propagators
+cf Q,L;
+cf DW,Da,Dg,Dh,DZ,Dgh;
+
+
+**********************************
+* gluon quark quark
+s vgqq;
+cf Ffg;
+
+* photon coupling to fermions
+s
+vanuenue,vanumunumu,vanutaunutau,
+vaee,vamumu,vatautau,
+vauu,vacc,vatt,
+vadd,vass,vabb,
+;
+
+cf
+Fnuenuea,Fnumunumua,Fnutaunutaua,
+Feea,Fmumua,Ftautaua,
+Fuua,Fcca,Ftta,
+Fdda,Fssa,Fbba,
+;
+
+**********************************
+* Z coupling to fermions
+s
+vznuenue,vznumunumu,vznutaunutau,
+vzee,vzmumu,vztautau,
+vzuu,vzcc,vztt,
+vzdd,vzss,vzbb,
+;
+
+s
+vznuenuel,vznumunumul,vznutaunutaul,
+vzeel,vzmumul,vztautaul,
+vzuul,vzccl,vzttl,
+vzddl,vzssl,vzbbl,
+;
+
+s
+vznuenuer,vznumunumur,vznutaunutaur,
+vzeer,vzmumur,vztautaur,
+vzuur,vzccr,vzttr,
+vzddr,vzssr,vzbbr,
+;
+
+cf
+Fnuenuez,Fnumunumuz,Fnutaunutauz,
+Feez,Fmumuz,Ftautauz,
+Fuuz,Fccz,Fttz,
+Fddz,Fssz,Fbbz,
+;
+
+**********************************
+* Higgs coupling to fermions
+s
+vhnuenue,vhnumunumu,vhnutaunutau,
+vhee,vhmumu,vhtautau,
+vhuu,vhcc,vhtt,
+vhdd,vhss,vhbb,
+;
+
+cf
+Fnuenueh,Fnumunumuh,Fnutaunutauh,
+Feeh,Fmumuh,Ftautauh,
+Fuuh,Fcch,Ftth,
+Fddh,Fssh,Fbbh,
+;
+
+**********************************
+* G0 coupling to fermions
+s
+vG0nuenue,vG0numunumu,vG0nutaunutau,
+vG0ee,vG0mumu,vG0tautau,
+vG0uu,vG0cc,vG0tt,
+vG0dd,vG0ss,vG0bb,
+;
+
+s
+vG0nuenuel,vG0numunumul,vG0nutaunutaul,
+vG0eel,vG0mumul,vG0tautaul,
+vG0uul,vG0ccl,vG0ttl,
+vG0ddl,vG0ssl,vG0bbl,
+;
+
+s
+vG0nuenuer,vG0numunumur,vG0nutaunutaur,
+vG0eer,vG0mumur,vG0tautaur,
+vG0uur,vG0ccr,vG0ttr,
+vG0ddr,vG0ssr,vG0bbr,
+;
+
+cf
+FnuenueG,FnumunumuG,FnutaunutauG,
+FeeG,FmumuG,FtautauG,
+FuuG,FccG,FttG,
+FddG,FssG,FbbG,
+;
+
+**********************************
+* W  coupling to fermions
+s
+vnueewp,vnumumuwp,vnutautauwp,
+vudwp,vuswp,vubwp,
+vcdwp,vcswp,vcbwp,
+vtdwp,vtswp,vtbwp,
+;
+
+cf
+Fnueewp,Fnumumuwp,Fnutautauwp,
+Fudwp,Fuswp,Fubwp,
+Fcdwp,Fcswp,Fcbwp,
+Ftdwp,Ftswp,Ftbwp,
+;
+
+s
+venuewm,vmunumuwm,vtaunutauwm,
+vduwm,vsuwm,vbuwm,
+vdcwm,vscwm,vbcwm,
+vdtwm,vstwm,vbtwm,
+;
+
+cf
+Fenuewm,Fmunumuwm,Ftaunutauwm,
+Fduwm,Fsuwm,Fbuwm,
+Fdcwm,Fscwm,Fbcwm,
+Fdtwm,Fstwm,Fbtwm,
+;
+
+**********************************
+* G^(+-)  coupling to fermions
+s
+vnueeGp,vnumumuGp,vnutautauGp,
+vudGp,vusGp,vubGp,
+vcdGp,vcsGp,vcbGp,
+vtdGp,vtsGp,vtbGp,
+;
+
+s
+vnueeGpl,vnumumuGpl,vnutautauGpl,
+vudGpl,vusGpl,vubGpl,
+vcdGpl,vcsGpl,vcbGpl,
+vtdGpl,vtsGpl,vtbGpl,
+;
+
+s
+vnueeGpr,vnumumuGpr,vnutautauGpr,
+vudGpr,vusGpr,vubGpr,
+vcdGpr,vcsGpr,vcbGpr,
+vtdGpr,vtsGpr,vtbGpr,
+;
+
+cf
+FnueeGp,FnumumuGp,FnutautauGp,
+FudGp,FusGp,FubGp,
+FcdGp,FcsGp,FcbGp,
+FtdGp,FtsGp,FtbGp,
+;
+
+s
+venueGm,vmunumuGm,vtaunutauGm,
+vduGm,vsuGm,vbuGm,
+vdcGm,vscGm,vbcGm,
+vdtGm,vstGm,vbtGm,
+;
+
+s
+venueGml,vmunumuGml,vtaunutauGml,
+vduGml,vsuGml,vbuGml,
+vdcGml,vscGml,vbcGml,
+vdtGml,vstGml,vbtGml,
+;
+
+s
+venueGmr,vmunumuGmr,vtaunutauGmr,
+vduGmr,vsuGmr,vbuGmr,
+vdcGmr,vscGmr,vbcGmr,
+vdtGmr,vstGmr,vbtGmr,
+;
+
+cf
+FenueGm,FmunumuGm,FtaunutauGm,
+FduGm,FsuGm,FbuGm,
+FdcGm,FscGm,FbcGm,
+FdtGm,FstGm,FbtGm,
+;
+
+**********************************
+* vertices without fermions
+**********************************
+
+* ghost ghost gluon
+s vugugg;
+cf VUgugg;
+
+* gluon gluon gluon
+s  v3g;
+cf Vggg;
+
+* gluon gluon gluon gluon
+s  v4g;
+cf Vgggg;
+
+* EW vertices in the order of denner
+s
+vwwww,vwwzz,vwwaz,vwwaa,
+vaww,vzww,
+vhhhh,vhhgg,vg0g0gg,vgggg,vg0g0g0g0,
+vhhh,vhgg,
+vwwhh,vwwgg,vzzgg,vzagg,vaagg,vzzhh,vzzg0g0,vzahh,vzag0g0,vwzgh,vwagh,vwzgpg0,vwzgmg0,vwagpg0,vwagmg0,
+vag0h,vzg0h,vagg,vzgg,vwgmh,vwgph,vwgg,
+vhww,vhzz,vhza,vgwz,vgwa,
+vaupup,vaumum,vzupup,vzumum,vwupuz,vwumuz,vwuzum,vwuzup,vwupua,vwumua,vwuaum,vwuaup,
+vhuzuz,vhupup,vhumum,vg0upup,vg0umum,vguzu,vguuz,vguua,
+;
+
+cf
+VWWWW,VWWZZ,VWWAZ,VWWAA,
+VAWW,VZWW,
+VHHHH,VHHGG,VG0G0GG,VGGGG,VG0G0G0G0,
+VHHH,VHGG,
+VWWHH,VWWGG,VZZGG,VZAGG,VAAGG,VZZHH,VZZG0G0,VZAHH,VZAG0G0,VWZGH,VWAGH,VWZGpG0,VWZGmG0,VWAGpG0,VWAGmG0,
+VAG0H,VZG0H,VAGG,VZGG,VWGmH,VWGpH,VWGG,
+VHWW,VHZZ,VHZA,VGWZ,VGWA,
+VAUpup,VAUmum,VZUpup,VZUmum,VWUpuz,VWUmuz,VWUzum,VWUzup,VWUpua,VWUmua,VWUaum,VWUaup,
+VHUzuz,VHUpup,VHUmum,VG0Upup,VG0Umum,VGUuz,VGUzu,VGUua,
+;
+
+*
+*--#] DEF :
+
+*--#[ POLARIZATION :
+*
+
+id dummyspinor(xx1?, xx2?neg_, xx3?neg_) = dummyspinor(xx1, nneg(-xx2), nneg(-xx3));
+
+id pol(xx1?smfields, xx2?neg_, q1?) = pol(xx1, nneg(-xx2), q1);
+
+repeat;
+
+* quarks:
+
+id pol(xx2?smquarkfield,nneg(xx1?even_),q1?)*dummyspinor(xx3?, ?b, nneg(xx1?), ?c)*DIRAC(xx3?,?a)
+   = UbarSp(xx2, su3col, JJ[xx1], mom, q1)*DIRAC(xx3,?a)*dummyspinor(xx3, ?b, nneg(xx1), ?c) ;
+
+id pol(xx2?smantiquarkfield,nneg(xx1?even_),q1?)*dummyspinor(xx3?, ?b, nneg(xx1?), ?c)*DIRAC(xx3?,?a)
+   = DIRAC(xx3,?a)*VSp(xx2, su3col, jj[xx1], mom, q1)*dummyspinor(xx3, ?b, nneg(xx1), ?c) ;
+
+id pol(xx2?smquarkfield,nneg(xx1?odd_),q1?)*dummyspinor(xx3?, ?b, nneg(xx1?), ?c)*DIRAC(xx3?,?a)
+   = DIRAC(xx3,?a)*USp(xx2, su3col, jj[xx1], mom, q1)*dummyspinor(xx3, ?b, nneg(xx1), ?c) ;
+
+id pol(xx2?smantiquarkfield,nneg(xx1?odd_),q1?)*dummyspinor(xx3?, ?b, nneg(xx1?), ?c)*DIRAC(xx3?,?a)
+   = VbarSp(xx2, su3col, JJ[xx1], mom, q1)*DIRAC(xx3,?a)*dummyspinor(xx3, ?b, nneg(xx1), ?c) ;
+
+* leptons:
+
+id pol(xx2?smleptonfield,nneg(xx1?even_),q1?)*dummyspinor(xx3?, ?b, nneg(xx1?), ?c)*DIRAC(xx3?,?a)
+   = UbarSp(xx2, mom, q1)*DIRAC(xx3,?a)*dummyspinor(xx3, ?b, nneg(xx1), ?c) ;
+
+id pol(xx2?smantileptonfield,nneg(xx1?even_),q1?)*dummyspinor(xx3?, ?b, nneg(xx1?), ?c)*DIRAC(xx3?,?a)
+   = DIRAC(xx3,?a)*VSp(xx2, mom, q1)*dummyspinor(xx3, ?b, nneg(xx1), ?c) ;
+
+id pol(xx2?smleptonfield,nneg(xx1?odd_),q1?)*dummyspinor(xx3?, ?b, nneg(xx1?), ?c)*DIRAC(xx3?,?a)
+   = DIRAC(xx3,?a)*USp(xx2, mom, q1)*dummyspinor(xx3, ?b, nneg(xx1), ?c) ;
+
+id pol(xx2?smantileptonfield,nneg(xx1?odd_),q1?)*dummyspinor(xx3?, ?b, nneg(xx1?), ?c)*DIRAC(xx3?,?a)
+   = VbarSp(xx2, mom, q1)*DIRAC(xx3,?a)*dummyspinor(xx3, ?b, nneg(xx1), ?c) ;
+
+endrepeat;
+
+id dummyspinor(?a) = 1;
+
+*** Polarization vectors ***
+
+* su3 adjoints:
+
+id pol(g, nneg(xx2?odd_), q1?) = ee(g, su3col, bbb[xx2], mom, q1, lorentz, mmuu[xx2]);
+id pol(g, nneg(xx2?even_), q1?) = eestar(g, su3col, bbb[xx2], mom, q1, lorentz, mmuu[xx2]);
+
+* su3 singlets:
+
+id pol(h, nneg(xx2?odd_), q1?) = pol(h, mom, q1, in);
+id pol(h, nneg(xx2?even_), q1?) = pol(h, mom, q1, out);
+
+id pol(a, nneg(xx2?odd_), q1?) = ee(a, mom, q1, lorentz, mmuu[xx2]);
+id pol(a, nneg(xx2?even_), q1?) = eestar(a, mom, q1, lorentz, mmuu[xx2]);
+
+id pol(z, nneg(xx2?odd_), q1?) = ee(z, mom, q1, lorentz, mmuu[xx2]);
+id pol(z, nneg(xx2?even_), q1?) = eestar(z, mom, q1, lorentz, mmuu[xx2]);
+
+id pol(wm, nneg(xx2?odd_), q1?) = ee(wm, mom, q1, lorentz, mmuu[xx2]);
+id pol(wm, nneg(xx2?even_), q1?) = eestar(wm, mom, q1, lorentz, mmuu[xx2]);
+
+id pol(wp, nneg(xx2?odd_), q1?) = ee(wp, mom, q1, lorentz, mmuu[xx2]);
+id pol(wp, nneg(xx2?even_), q1?) = eestar(wp, mom, q1, lorentz, mmuu[xx2]);
+
+.sort
+
+*
+*--#] POLARIZATION :
+
+*--#[ GROUPTHEORY :
+
+#include docolour
+
+set dcolAntiFF:
+Fuua,Fcca,Ftta,
+Fdda,Fssa,Fbba,
+Fuuz,Fccz,Fttz,
+Fddz,Fssz,Fbbz,
+Fuuh,Fcch,Ftth,
+Fddh,Fssh,Fbbh,
+FuuG,FccG,FttG,
+FddG,FssG,FbbG,
+Fudwp,Fuswp,Fubwp,
+Fcdwp,Fcswp,Fcbwp,
+Ftdwp,Ftswp,Ftbwp,
+Fduwm,Fsuwm,Fbuwm,
+Fdcwm,Fscwm,Fbcwm,
+Fdtwm,Fstwm,Fbtwm,
+FudGp,FusGp,FubGp,
+FcdGp,FcsGp,FcbGp,
+FtdGp,FtsGp,FtbGp,
+FduGm,FsuGm,FbuGm,
+FdcGm,FscGm,FbcGm,
+FdtGm,FstGm,FbtGm,
+;
+
+set TcolAntiFF:
+Ffg
+;
+
+id dummycf?dcolAntiFF(xx1?,xx2?,xx3?,?a) = dummycf(xx1,xx2,xx3,?a) * Dcol(xx1,xx2);
+id dummycf?TcolAntiFF(xx1?,xx2?,xx3?,?a) = dummycf(xx1,xx2,xx3,?a) * Tcol(xx1,xx2,xx3);
+
+*
+*--#] GROUPTHEORY :
+
+*--#[ INSERTPROPAGATORS :
+
+* The lepton propagator
+id L(xx1?pos_,xx2?pos_,lorentz,?x,mom,?p,mass,M?,field,fname?) = i_*F(xx1,xx2,mom,?p,mass,M,field,fname)*Deno(?p,M);
+
+
+* The quark propagator
+id Q(xx1?pos_,xx2?pos_,lorentz,?x,mom,?p,mass,M?,field,fname?) = i_*F(xx1,xx2,mom,?p,mass,M,field,fname)*Deno(?p,M)*Dcol(xx1,xx2);
+
+
+* The gluon propagator
+#ifdef `GAUGEG'
+id Dg(xx1?pos_,xx2?pos_,lorentz,nu1?,nu2?,mom,p?,mass,M?,field,fname?) =
+                     -i_*Deno(p,M)*(d_(nu1,nu2) - p(nu1)*p(nu2)*Deno(p,M)*`GAUGEG')*Dadcol(xx1,xx2);
+#endif
+
+#ifndef `GAUGEG'
+id Dg(xx1?pos_,xx2?pos_,lorentz,nu1?,nu2?,mom,p?,mass,M?,field,fname?) =
+                     -i_*Deno(p,M)*(d_(nu1,nu2))*Dadcol(xx1,xx2);
+#endif
+
+* The photon propagator
+#ifdef `GAUGEA'
+  id Da(xx1?pos_,xx2?pos_,lorentz,nu1?,nu2?,mom,p?,mass,M?,field,fname?) = -i_*Deno(p,M)*(d_(nu1,nu2) - p(nu1)*p(nu2)*Deno(p,M)*`GAUGEA');
+#endif
+
+#ifndef `GAUGEA'
+  id Da(xx1?pos_,xx2?pos_,lorentz,nu1?,nu2?,mom,p?,mass,M?,field,fname?) = -i_*Deno(p,M)*(d_(nu1,nu2));
+#endif
+
+* The W propagator
+#ifdef `GAUGEW'
+  id DW(xx1?pos_,xx2?pos_,lorentz,nu1?,nu2?,mom,p?,mass,M?,field,fname?) = -i_*Deno(p,M)*(d_(nu1,nu2) - p(nu1)*p(nu2)*Deno(p,M8)*`GAUGEW');
+#endif
+
+#ifndef `GAUGEW'
+  id DW(xx1?pos_,xx2?pos_,lorentz,nu1?,nu2?,mom,p?,mass,M?,field,fname?) = -i_*Deno(p,M)*(d_(nu1,nu2));
+#endif
+
+* The Z propagator
+#ifdef `GAUGEZ'
+  id DZ(xx1?pos_,xx2?pos_,lorentz,nu1?,nu2?,mom,p?,mass,M?,field,fname?) = -i_*Deno(p,M)*(d_(nu1,nu2) - p(nu1)*p(nu2)*Deno(p,M10)*`GAUGEZ');
+#endif
+
+#ifndef `GAUGEZ'
+  id DZ(xx1?pos_,xx2?pos_,lorentz,nu1?,nu2?,mom,p?,mass,M?,field,fname?) = -i_*d_(nu1,nu2)*Deno(p,M);
+#endif
+
+* The electroweak ghost and Goldstone propagators
+#ifdef `GAUGEZ'
+  id Dh(?a,mom,?p,mass,MZ,field,fname?) = i_*Deno(?p,M10);
+#endif
+
+#ifndef `GAUGEZ'
+  id Dh(?a,mom,?p,mass,MZ,field,fname?) = i_*Deno(?p,MZ);
+#endif
+
+
+#ifdef `GAUGEW'
+  id Dh(?a,mom,?p,mass,MW,field,fname?) = i_*Deno(?p,M8);
+#endif
+
+#ifndef `GAUGEW'
+  id Dh(?a,mom,?p,mass,MW,field,fname?) = i_*Deno(?p,MW);
+#endif
+
+id Dh(?a,mom,?p,mass,0,field,fname?) = i_*Deno(?p,0);
+
+* The Higgs propagator
+id Dh(xx1?pos_,xx2?pos_,lorentz,?a,mom,?p,mass,Mhiggs,field,fname?) = i_*Deno(?p,Mhiggs);
+
+* The Gluon ghost propagator
+id Dgh(xx1?pos_,xx2?pos_,lorentz,?a,mom,p?,mass,M?,field,fname?) = i_*Deno(p,M)*Dadcol(xx1,xx2);
+
+*--#] INSERTPROPAGATORS :
+
+*--#[ INSERTVERTICES :
+
+* Vggg
+id Vggg(xx1?,xx2?,xx3?,lorentz,nu1?,nu2?,nu3?,mom,v1?,v2?,v3?) =
+  Fcol(xx1,xx2,xx3)*v3g*(
+      +d_(nu1,nu3)*(v3(nu2)-v1(nu2))
+      +d_(nu2,nu3)*(v2(nu1)-v3(nu1))
+      +d_(nu1,nu2)*(v1(nu3)-v2(nu3))
+      );
+.sort
+
+* Vgggg
+repeat;
+id once Vgggg(xx1?,xx2?,xx3?,xx4?,lorentz,nu1?,nu2?,nu3?,nu4?, mom,v1?,v2?,v3?,v4?) =
+      ( Fcol(xx1,xx2,tempa1)*Fcol(xx3,xx4,tempa1)*(d_(nu1,nu3)*d_(nu2,nu4) - d_(nu1,nu4)*d_(nu2,nu3))
+       +Fcol(xx1,xx4,tempa1)*Fcol(xx2,xx3,tempa1)*(d_(nu1,nu2)*d_(nu3,nu4) - d_(nu1,nu3)*d_(nu2,nu4))
+       +Fcol(xx1,xx3,tempa1)*Fcol(xx2,xx4,tempa1)*(d_(nu1,nu2)*d_(nu3,nu4) - d_(nu1,nu4)*d_(nu2,nu3))
+      )*v4g;
+sum tempa1;
+endrepeat;
+.sort
+
+* VUgugg
+id VUgugg(xx1?,xx2?,xx3?,lorentz,nu1?,nu2?,nu3?,mom,v1?,v2?,v3?) =
+   Fcol(xx1,xx3,xx2)*(-v1(nu3))*vugugg;
+
+*--#] INSERTVERTICES :
+
+*--#[ INSERTFERMIONVERTICES :
+*--#] INSERTFERMIONVERTICES :
+
+
+*--#[ FF :
+*
+Ffg,
+Fnuenuea,Fnumunumua,Fnutaunutaua,
+Feea,Fmumua,Ftautaua,
+Fuua,Fcca,Ftta,
+Fdda,Fssa,Fbba,
+Fnuenuez,Fnumunumuz,Fnutaunutauz,
+Feez,Fmumuz,Ftautauz,
+Fuuz,Fccz,Fttz,
+Fddz,Fssz,Fbbz,
+Fnuenueh,Fnumunumuh,Fnutaunutauh,
+Feeh,Fmumuh,Ftautauh,
+Fuuh,Fcch,Ftth,
+Fddh,Fssh,Fbbh,
+FnuenueG,FnumunumuG,FnutaunutauG,
+FeeG,FmumuG,FtautauG,
+FuuG,FccG,FttG,
+FddG,FssG,FbbG,
+Fnueewp,Fnumumuwp,Fnutautauwp,
+Fudwp,Fuswp,Fubwp,
+Fcdwp,Fcswp,Fcbwp,
+Ftdwp,Ftswp,Ftbwp,
+Fenuewm,Fmunumuwm,Ftaunutauwm,
+Fduwm,Fsuwm,Fbuwm,
+Fdcwm,Fscwm,Fbcwm,
+Fdtwm,Fstwm,Fbtwm,
+FnueeGp,FnumumuGp,FnutautauGp,
+FudGp,FusGp,FubGp,
+FcdGp,FcsGp,FcbGp,
+FtdGp,FtsGp,FtbGp,
+FenueGm,FmunumuGm,FtaunutauGm,
+FduGm,FsuGm,FbuGm,
+FdcGm,FscGm,FbcGm,
+FdtGm,FstGm,FbtGm,
+*
+*--#] FF :
+
+*--#[ VERTICES :
+*
+vgqq,
+vanuenue,vanumunumu,vanutaunutau,
+vaee,vamumu,vatautau,
+vauu,vacc,vatt,
+vadd,vass,vabb,
+vznuenue,vznumunumu,vznutaunutau,
+vzee,vzmumu,vztautau,
+vzuu,vzcc,vztt,
+vzdd,vzss,vzbb,
+vhnuenue,vhnumunumu,vhnutaunutau,
+vhee,vhmumu,vhtautau,
+vhuu,vhcc,vhtt,
+vhdd,vhss,vhbb,
+vG0nuenue,vG0numunumu,vG0nutaunutau,
+vG0ee,vG0mumu,vG0tautau,
+vG0uu,vG0cc,vG0tt,
+vG0dd,vG0ss,vG0bb,
+vnueewp,vnumumuwp,vnutautauwp,
+vudwp,vuswp,vubwp,
+vcdwp,vcswp,vcbwp,
+vtdwp,vtswp,vtbwp,
+venuewm,vmunumuwm,vtaunutauwm,
+vduwm,vsuwm,vbuwm,
+vdcwm,vscwm,vbcwm,
+vdtwm,vstwm,vbtwm,
+vnueeGp,vnumumuGp,vnutautauGp,
+vudGp,vusGp,vubGp,
+vcdGp,vcsGp,vcbGp,
+vtdGp,vtsGp,vtbGp,
+venueGm,vmunumuGm,vtaunutauGm,
+vduGm,vsuGm,vbuGm,
+vdcGm,vscGm,vbcGm,
+vdtGm,vstGm,vbtGm,
+*
+*--#] VERTICES :
+
+*--#[ VVCOUP :
+vgqq,
+vanuenue,vanumunumu,vanutaunutau,
+vaee,vamumu,vatautau,
+vauu,vacc,vatt,
+vadd,vass,vabb,
+*--#] VVCOUP :
+
+*--#[ VVACOUPV :
+vznuenue,vznumunumu,vznutaunutau,
+vzee,vzmumu,vztautau,
+vzuu,vzcc,vztt,
+vzdd,vzss,vzbb,
+vnueewp,vnumumuwp,vnutautauwp,
+vudwp,vuswp,vubwp,
+vcdwp,vcswp,vcbwp,
+vtdwp,vtswp,vtbwp,
+venuewm,vmunumuwm,vtaunutauwm,
+vduwm,vsuwm,vbuwm,
+vdcwm,vscwm,vbcwm,
+vdtwm,vstwm,vbtwm,
+*--#] VVACOUPV :
+
+*--#[ VVACOUPL :
+vznuenuel,vznumunumul,vznutaunutaul,
+vzeel,vzmumul,vztautaul,
+vzuul,vzccl,vzttl,
+vzddl,vzssl,vzbbl,
+1,1,1,
+1,1,1,
+1,1,1,
+1,1,1,
+1,1,1,
+1,1,1,
+1,1,1,
+1,1,1,
+*--#] VVACOUPL :
+
+*--#[ VVACOUPR :
+vznuenuer,vznumunumur,vznutaunutaur,
+vzeer,vzmumur,vztautaur,
+vzuur,vzccr,vzttr,
+vzddr,vzssr,vzbbr,
+0,0,0,
+0,0,0,
+0,0,0,
+0,0,0,
+0,0,0,
+0,0,0,
+0,0,0,
+0,0,0,
+*--#] VVACOUPR :
+
+*--#[ SCOUPV :
+vhnuenue,vhnumunumu,vhnutaunutau,
+vhee,vhmumu,vhtautau,
+vhuu,vhcc,vhtt,
+vhdd,vhss,vhbb,
+*--#] SCOUPV :
+
+*--#[ SACOUPV :
+vG0nuenue,vG0numunumu,vG0nutaunutau,
+vG0ee,vG0mumu,vG0tautau,
+vG0uu,vG0cc,vG0tt,
+vG0dd,vG0ss,vG0bb,
+vnueeGp,vnumumuGp,vnutautauGp,
+vudGp,vusGp,vubGp,
+vcdGp,vcsGp,vcbGp,
+vtdGp,vtsGp,vtbGp,
+venueGm,vmunumuGm,vtaunutauGm,
+vduGm,vsuGm,vbuGm,
+vdcGm,vscGm,vbcGm,
+vdtGm,vstGm,vbtGm,
+*--#] SACOUPV :
+
+*--#[ SACOUPLV :
+vG0nuenuel,vG0numunumul,vG0nutaunutaul,
+vG0eel,vG0mumul,vG0tautaul,
+vG0uul,vG0ccl,vG0ttl,
+vG0ddl,vG0ssl,vG0bbl,
+vnueeGpl,vnumumuGpl,vnutautauGpl,
+vudGpl,vusGpl,vubGpl,
+vcdGpl,vcsGpl,vcbGpl,
+vtdGpl,vtsGpl,vtbGpl,
+venueGml,vmunumuGml,vtaunutauGml,
+vduGml,vsuGml,vbuGml,
+vdcGml,vscGml,vbcGml,
+vdtGml,vstGml,vbtGml,
+*--#] SACOUPLV :
+
+*--#[ SACOUPRV :
+vG0nuenuer,vG0numunumur,vG0nutaunutaur,
+vG0eer,vG0mumur,vG0tautaur,
+vG0uur,vG0ccr,vG0ttr,
+vG0ddr,vG0ssr,vG0bbr,
+vnueeGpr,vnumumuGpr,vnutautauGpr,
+vudGpr,vusGpr,vubGpr,
+vcdGpr,vcsGpr,vcbGpr,
+vtdGpr,vtsGpr,vtbGpr,
+venueGmr,vmunumuGmr,vtaunutauGmr,
+vduGmr,vsuGmr,vbuGmr,
+vdcGmr,vscGmr,vbcGmr,
+vdtGmr,vstGmr,vbtGmr,
+*--#] SACOUPRV :
+
+***************************
+*** VV generic vertices ***
+***************************
+*--#[ VVgenCOUP :
+*--#] VVgenCOUP :
+
+*--#[ vVVgenCOUP1 :
+*--#] vVVgenCOUP1 :
+
+*--#[ vVVgenCOUP2 :
+*--#] vVVgenCOUP2 :
+
+*--#[ vVVgenCOUP3 :
+*--#] vVVgenCOUP3 :
+
+***************************
+*** SS generic vertices ***
+***************************
+*--#[ SSgenCOUP :
+*--#] SSgenCOUP :
+
+*--#[ vSSgenCOUP1 :
+*--#] vSSgenCOUP1 :
+
+*--#[ vSSgenCOUP2 :
+*--#] vSSgenCOUP2 :
+
+***************************
+*** VS generic vertices ***
+***************************
+*--#[ VSgenCOUP :
+*--#] VSgenCOUP :
+
+*--#[ vVSgenCOUP1 :
+*--#] vVSgenCOUP1 :
+
+****************************
+*** VVV generic vertices ***
+****************************
+*--#[ VVVgenCOUP :
+VAWW,VZWW,
+*--#] VVVgenCOUP :
+
+*--#[ vVVVgenCOUP :
+vaww,vzww,
+*--#] vVVVgenCOUP :
+
+
+****************************
+*** SVV generic vertices ***
+****************************
+*--#[ SVVgenCOUP :
+VHWW,VHZZ,VHZA,VGWA,VGWZ,
+*--#] SVVgenCOUP :
+
+*--#[ vSVVgenCOUP :
+vhww,vhzz,vhza,vgwa,vgwz,
+*--#] vSVVgenCOUP :
+
+
+****************************
+*** SSS generic vertices ***
+****************************
+*--#[ SSSgenCOUP :
+VHHH,VHGG,VHUzuz,VHUpup,VHUmum ,VG0Upup,VG0Umum,VGUuz,VGUzu,VGUua,
+*--#] SSSgenCOUP :
+
+*--#[ vSSSgenCOUP :
+vhhh,vhgg,vhuzuz,vhupup,vhumum,vg0upup,vg0umum,vguuz,vguzu,vguua,
+*--#] vSSSgenCOUP :
+
+
+*****************************
+*** SSSS generic vertices ***
+*****************************
+*--#[ SSSSgenCOUP :
+VHHHH,VHHGG,VG0G0GG,VGGGG,VG0G0G0G0,
+*--#] SSSSgenCOUP :
+
+*--#[ vSSSSgenCOUP :
+vhhhh,vhhgg,vg0g0gg,vgggg,vg0g0g0g0,
+*--#] vSSSSgenCOUP :
+
+
+*****************************
+*** VVSS generic vertices ***
+*****************************
+*--#[ VVSSgenCOUP :
+VWWHH,VZZGG,VZZG0G0,VZZHH,VZAHH,VZAG0G0,VZAGG,VAAGG,
+VWWGG,VWZGH,VWAGH,VWZGpG0,VWZGmG0,VWAGpG0,VWAGmG0,
+*--#] VVSSgenCOUP :
+
+*--#[ vVVSSgenCOUP :
+vwwhh,vzzgg,vzzg0g0,vzzhh,vzahh,vzag0g0,vzagg,vaagg,vwwgg,
+vwzgh,vwagh,vwzgpg0,vwzgmg0,vwagpg0,vwagmg0,
+*--#] vVVSSgenCOUP :
+
+
+*****************************
+*** VVVV generic vertices ***
+*****************************
+*--#[ VVVVgenCOUP :
+VWWWW,VWWZZ,VWWAZ,VWWAA,
+*--#] VVVVgenCOUP :
+
+*--#[ vVVVVgenCOUP :
+vwwww,vwwzz,vwwaz,vwwaa,
+*--#] vVVVVgenCOUP :
+
+
+****************************
+*** VSS generic vertices ***
+****************************
+*--#[ VSSgenCOUP :
+VWGG,VAG0H,VZG0H,VAGG,VZGG,VWGmH,VWGpH,
+*--#] VSSgenCOUP :
+
+*--#[ vVSSgenCOUP :
+vwgg,vag0h,vzg0h,vagg,vzgg,vwgmh,vwgph,
+*--#] vVSSgenCOUP :
+
+
+******************************************
+*** VGG (ghost ghost) generic vertices ***
+******************************************
+*--#[ VGGgenCOUP :
+VAUpup,VAUmum,VZUpup,VZUmum,VWUmuz,VWUzum,VWUmua,VWUaum,VWUpuz,VWUzup,VWUpua,VWUaup,
+*--#] VGGgenCOUP :
+
+*--#[ vVGGgenCOUP :
+vaupup,vaumum,vzupup,vzumum,vwumuz,vwuzum,vwumua,vwuaum,vwupuz,vwuzup,vwupua,vwuaup,
+*--#] vVGGgenCOUP :
+
+
+*--#[ AMASSES :
+
+* e.g.: Melectron < Mmu < Mup < Mdown < Mstrange < Mcharm < Mtau < Mbottom < MW < MZ < Mtop < Mhiggs
+
+set massorder: Melectron,Mmu,Mup,Mdown,Mstrange,Mcharm,Mtau,Mbottom,MW,MZ,Mhiggs,Mtop;
+
+* define length of set
+#$massnum = 12;
+
+#message the number of ordered masses is: `$massnum'
+
+*--#] AMASSES :
+
+*--#[ INSERTCOUPLINGS :
+*
+
+************************************
+* vertices with fermions           *
+************************************
+id vgqq     =  i_*gs;
+
+id vanuenue 	= 0;
+id vanumunumu 	= 0;
+id vanutaunutau = 0;
+id vaee 	= -i_*el*Qe;
+id vamumu 	= -i_*el*Qmu;
+id vatautau 	= -i_*el*Qtau;
+id vauu 	= -i_*el*Qu;
+id vacc 	= -i_*el*Qc;
+id vatt 	= -i_*el*Qt;
+id vadd 	= -i_*el*Qd;
+id vass 	= -i_*el*Qs;
+id vabb 	= -i_*el*Qb;
+
+************************************
+
+id vznuenue 	= i_*el;
+id vznumunumu 	= i_*el;
+id vznutaunutau = i_*el;
+id vzee 	= i_*el;
+id vzmumu 	= i_*el;
+id vztautau	= i_*el;
+id vzuu 	= i_*el;
+id vzcc 	= i_*el;
+id vztt 	= i_*el;
+id vzdd 	= i_*el;
+id vzss 	= i_*el;
+id vzbb 	= i_*el;
+
+id vznuenuel 	= (1/2)/sw/cw;
+id vznumunumul 	= (1/2)/sw/cw;
+id vznutaunutaul= (1/2)/sw/cw;
+id vzeel 	= (-1/2-sw^2*Qe  )/sw/cw;
+id vzmumul 	= (-1/2-sw^2*Qmu )/sw/cw;
+id vztautaul 	= (-1/2-sw^2*Qtau)/sw/cw;
+id vzuul 	= ( 1/2-sw^2*Qu  )/sw/cw;
+id vzccl 	= ( 1/2-sw^2*Qc  )/sw/cw;
+id vzttl 	= ( 1/2-sw^2*Qt  )/sw/cw;
+id vzddl 	= (-1/2-sw^2*Qd  )/sw/cw;
+id vzssl 	= (-1/2-sw^2*Qs  )/sw/cw;
+id vzbbl 	= (-1/2-sw^2*Qb  )/sw/cw;
+
+id vznuenuer	= 0;
+id vznumunumur  = 0;
+id vznutaunutaur= 0;
+id vzeer 	= -sw/cw*Qe;
+id vzmumur 	= -sw/cw*Qmu;
+id vztautaur 	= -sw/cw*Qtau;
+id vzuur	= -sw/cw*Qu;
+id vzccr	= -sw/cw*Qc;
+id vzttr 	= -sw/cw*Qt;
+id vzddr 	= -sw/cw*Qd;
+id vzssr 	= -sw/cw*Qs;
+id vzbbr 	= -sw/cw*Qb;
+
+************************************
+
+id vhnuenue 	= 0;
+id vhnumunumu 	= 0;
+id vhnutaunutau = 0;
+id vhee 	= -i_*el*Melectron/MW/2/sw;
+id vhmumu 	= -i_*el*Mmu/MW/2/sw;
+id vhtautau 	= -i_*el*Mtau/MW/2/sw;
+id vhuu 	= -i_*el*Mup/MW/2/sw;
+id vhcc 	= -i_*el*Mcharm/MW/2/sw;
+id vhtt 	= -i_*el*Mtop/MW/2/sw;
+id vhdd 	= -i_*el*Mdown/MW/2/sw;
+id vhss 	= -i_*el*Mstrange/MW/2/sw;
+id vhbb 	= -i_*el*Mbottom/MW/2/sw;
+
+************************************
+
+id vnueewp 	= i_*el*2^(1/2)/2/sw;
+id venuewm 	= i_*el*2^(1/2)/2/sw;
+id vnumumuwp 	= i_*el*2^(1/2)/2/sw;
+id vmunumuwm 	= i_*el*2^(1/2)/2/sw;
+id vnutautauwp 	= i_*el*2^(1/2)/2/sw;
+id vtaunutauwm 	= i_*el*2^(1/2)/2/sw;
+
+id vudwp = i_*el*2^(1/2)/2/sw*CKM(1,1);
+id vduwm = i_*el*2^(1/2)/2/sw*CKMs(1,1);
+id vuswp = i_*el*2^(1/2)/2/sw*CKM(1,2);
+id vsuwm = i_*el*2^(1/2)/2/sw*CKMs(1,2);
+id vubwp = i_*el*2^(1/2)/2/sw*CKM(1,3);
+id vbuwm = i_*el*2^(1/2)/2/sw*CKMs(1,3);
+
+id vcdwp = i_*el*2^(1/2)/2/sw*CKM(2,1);
+id vdcwm = i_*el*2^(1/2)/2/sw*CKMs(2,1);
+id vcswp = i_*el*2^(1/2)/2/sw*CKM(2,2);
+id vscwm = i_*el*2^(1/2)/2/sw*CKMs(2,2);
+id vcbwp = i_*el*2^(1/2)/2/sw*CKM(2,3);
+id vbcwm = i_*el*2^(1/2)/2/sw*CKMs(2,3);
+
+id vtdwp = i_*el*2^(1/2)/2/sw*CKM(3,1);
+id vdtwm = i_*el*2^(1/2)/2/sw*CKMs(3,1);
+id vtswp = i_*el*2^(1/2)/2/sw*CKM(3,2);
+id vstwm = i_*el*2^(1/2)/2/sw*CKMs(3,2);
+id vtbwp = i_*el*2^(1/2)/2/sw*CKM(3,3);
+id vbtwm = i_*el*2^(1/2)/2/sw*CKMs(3,3);
+
+************************************
+
+id vnueeGp 	= i_*el;
+id venueGm 	= i_*el;
+id vnumumuGp 	= i_*el;
+id vmunumuGm 	= i_*el;
+id vnutautauGp 	= i_*el;
+id vtaunutauGm 	= i_*el;
+
+id vudGp = i_*el;
+id vduGm = i_*el;
+id vusGp = i_*el;
+id vsuGm = i_*el;
+id vubGp = i_*el;
+id vbuGm = i_*el;
+
+id vcdGp = i_*el;
+id vdcGm = i_*el;
+id vcsGp = i_*el;
+id vscGm = i_*el;
+id vcbGp = i_*el;
+id vbcGm = i_*el;
+
+id vtdGp = i_*el;
+id vdtGm = i_*el;
+id vtsGp = i_*el;
+id vstGm = i_*el;
+id vtbGp = i_*el;
+id vbtGm = i_*el;
+
+id vnueeGpr 	= -2^(1/2)/2/sw*Melectron/MW;
+id vnueeGpl 	= 0;
+id venueGml 	= -2^(1/2)/2/sw*Melectron/MW;
+id venueGmr 	= 0;
+id vnumumuGpr 	= -2^(1/2)/2/sw*Mmu/MW;
+id vnumumuGpl 	= 0;
+id vmunumuGml 	= -2^(1/2)/2/sw*Mmu/MW;
+id vmunumuGmr 	= 0;
+id vnutautauGpr = -2^(1/2)/2/sw*Mtau/MW;
+id vnutautauGpl = 0;
+id vtaunutauGml = -2^(1/2)/2/sw*Mtau/MW;
+id vtaunutauGmr = 0;
+
+id vudGpl =  2^(1/2)/2/sw*Mup/MW*CKM(1,1);
+id vudGpr = -2^(1/2)/2/sw*Mdown/MW*CKM(1,1);
+id vduGml = -2^(1/2)/2/sw*Mdown/MW*CKMs(1,1);
+id vduGmr =  2^(1/2)/2/sw*Mup/MW*CKMs(1,1);
+id vusGpl =  2^(1/2)/2/sw*Mup/MW*CKM(1,2);
+id vusGpr = -2^(1/2)/2/sw*Mstrange/MW*CKM(1,2);
+id vsuGml = -2^(1/2)/2/sw*Mstrange/MW*CKMs(1,2);
+id vsuGmr =  2^(1/2)/2/sw*Mup/MW*CKMs(1,2);
+id vubGpl =  2^(1/2)/2/sw*Mup/MW*CKM(1,3);
+id vubGpr = -2^(1/2)/2/sw*Mbottom/MW*CKM(1,3);
+id vbuGml = -2^(1/2)/2/sw*Mbottom/MW*CKMs(1,3);
+id vbuGmr =  2^(1/2)/2/sw*Mup/MW*CKMs(1,3);
+
+id vcdGpl =  2^(1/2)/2/sw*Mcharm/MW*CKM(2,1);
+id vcdGpr = -2^(1/2)/2/sw*Mdown/MW*CKM(2,1);
+id vdcGml = -2^(1/2)/2/sw*Mdown/MW*CKMs(2,1);
+id vdcGmr =  2^(1/2)/2/sw*Mcharm/MW*CKMs(2,1);
+id vcsGpl =  2^(1/2)/2/sw*Mcharm/MW*CKM(2,2);
+id vcsGpr = -2^(1/2)/2/sw*Mstrange/MW*CKM(2,2);
+id vscGml = -2^(1/2)/2/sw*Mstrange/MW*CKMs(2,2);
+id vscGmr =  2^(1/2)/2/sw*Mcharm/MW*CKMs(2,2);
+id vcbGpl =  2^(1/2)/2/sw*Mcharm/MW*CKM(2,3);
+id vcbGpr = -2^(1/2)/2/sw*Mbottom/MW*CKM(2,3);
+id vbcGml = -2^(1/2)/2/sw*Mbottom/MW*CKMs(2,3);
+id vbcGmr =  2^(1/2)/2/sw*Mcharm/MW*CKMs(2,3);
+
+id vtdGpl =  2^(1/2)/2/sw*Mtop/MW*CKM(3,1);
+id vtdGpr = -2^(1/2)/2/sw*Mdown/MW*CKM(3,1);
+id vdtGml = -2^(1/2)/2/sw*Mdown/MW*CKMs(3,1);
+id vdtGmr =  2^(1/2)/2/sw*Mtop/MW*CKMs(3,1);
+id vtsGpl =  2^(1/2)/2/sw*Mtop/MW*CKM(3,2);
+id vtsGpr = -2^(1/2)/2/sw*Mstrange/MW*CKM(3,2);
+id vstGml = -2^(1/2)/2/sw*Mstrange/MW*CKMs(3,2);
+id vstGmr =  2^(1/2)/2/sw*Mtop/MW*CKMs(3,2);
+id vtbGpl =  2^(1/2)/2/sw*Mtop/MW*CKM(3,3);
+id vtbGpr = -2^(1/2)/2/sw*Mbottom/MW*CKM(3,3);
+id vbtGml = -2^(1/2)/2/sw*Mbottom/MW*CKMs(3,3);
+id vbtGmr =  2^(1/2)/2/sw*Mtop/MW*CKMs(3,3);
+
+************************************
+
+id vG0ee     = i_*el;
+id vG0mumu   = i_*el;
+id vG0tautau = i_*el;
+id vG0ee     = i_*el;
+id vG0mumu   = i_*el;
+id vG0tautau = i_*el;
+id vG0uu     = i_*el;
+id vG0cc     = i_*el;
+id vG0tt     = i_*el;
+id vG0dd     = i_*el;
+id vG0ss     = i_*el;
+id vG0bb     = i_*el;
+
+id vG0nuenuel	  = 0;
+id vG0nuenuer	  = 0;
+id vG0numunumul	  = 0;
+id vG0numunumur	  = 0;
+id vG0nutaunutaul = 0;
+id vG0nutaunutaur = 0;
+
+id vG0eel 	  = -i_/sw*Melectron/MW*(1/2);
+id vG0eer   	  =  i_/sw*Melectron/MW*(1/2);
+id vG0mumul 	  = -i_/sw*Mmu/MW*(1/2);
+id vG0mumur 	  =  i_/sw*Mmu/MW*(1/2);
+id vG0tautaul 	  = -i_/sw*Mtau/MW*(1/2);
+id vG0tautaur 	  =  i_/sw*Mtau/MW*(1/2);
+
+id vG0uul 	  = -i_/sw*Mup/MW*(1/2);
+id vG0uur 	  =  i_/sw*Mup/MW*(1/2);
+id vG0ccl 	  = -i_/sw*Mcharm/MW*(1/2);
+id vG0ccr 	  =  i_/sw*Mcharm/MW*(1/2);
+id vG0ttl 	  = -i_/sw*Mtop/MW*(1/2);
+id vG0ttr 	  =  i_/sw*Mtop/MW*(1/2);
+
+id vG0ddl 	  =  i_/sw*Mdown/MW*(1/2);
+id vG0ddr 	  = -i_/sw*Mdown/MW*(1/2);
+id vG0ssl 	  =  i_/sw*Mstrange/MW*(1/2);
+id vG0ssr 	  = -i_/sw*Mstrange/MW*(1/2);
+id vG0bbl 	  =  i_/sw*Mbottom/MW*(1/2);
+id vG0bbr 	  = -i_/sw*Mbottom/MW*(1/2);
+
+************************************
+* vertices without fermions        *
+************************************
+id v3g      = gs;
+id v4g      = -i_*gs^2;
+id vugugg   = -gs;
+
+id vaww = -i_*el;
+id vzww =  i_*el*cw/sw;
+id vhww =  i_*el*MW/sw;
+id vgwz = -i_*el*MW*sw/cw;
+id vgwa = -i_*el*MW;
+
+id vhzz = i_*el*MW/sw/cw^2;
+id vhza = 0;
+
+id vhhh = -i_*el*3/2/sw*Mhiggs^2/MW;
+id vhgg = -i_*el/2/sw*Mhiggs^2/MW;
+
+id vhhhh 	= -i_*el^2*3/4/sw^2*Mhiggs^2/MW^2;
+id vhhgg 	= -i_*el^2*1/4/sw^2*Mhiggs^2/MW^2;
+id vg0g0gg 	= -i_*el^2*1/4/sw^2*Mhiggs^2/MW^2;
+id vgggg 	= -i_*el^2*1/2/sw^2*Mhiggs^2/MW^2;
+id vg0g0g0g0 	= -i_*el^2*3/4/sw^2*Mhiggs^2/MW^2;
+
+id vwgg =      el/2/sw;
+id vwgmh = -i_*el/2/sw;
+id vwgph =  i_*el/2/sw;
+
+id vag0h = 0;
+id vzg0h = el/2/sw/cw;
+id vagg  = -i_*el;
+id vzgg  = -i_*el*(sw^2 - cw^2)/2/sw/cw;
+
+id vwwhh =  i_*el^2/2/sw^2;
+id vwwgg =  i_*el^2/2/sw^2;
+id vwwww =  i_*el^2/sw^2;
+id vwwzz = -i_*el^2*cw^2/sw^2;
+id vwwaz =  i_*el^2*cw/sw;
+id vwwaa = -i_*el^2;
+
+id vzzgg   = i_*el^2*(sw^2 - cw^2)^2/2/sw^2/cw^2;
+id vzzg0g0 = i_*el^2/2/sw^2/cw^2;
+id vzagg   = i_*el^2*(sw^2 - cw^2)/sw/cw;
+id vzzhh   = i_*el^2/2/sw^2/cw^2;
+id vaagg   = i_*el^2*2;
+
+id vzahh   = 0;
+id vzag0g0 = 0;
+
+id vwzgh   = -i_*el^2/cw/2;
+id vwagh   = -i_*el^2/sw/2;
+id vwzgpg0 =  -1*el^2/cw/2;
+id vwzgmg0 =  +1*el^2/cw/2;
+id vwagpg0 =  -1*el^2/sw/2;
+id vwagmg0 =  +1*el^2/sw/2;
+
+id vaupup =  i_*el;
+id vaumum = -i_*el;
+id vzupup = -i_*el*cw/sw;
+id vzumum =  i_*el*cw/sw;
+id vwumuz = -i_*el*cw/sw;
+id vwuzum = -i_*el*cw/sw;
+id vwumua =  i_*el;
+id vwuaum =  i_*el;
+id vwupuz =  i_*el*cw/sw;
+id vwuzup =  i_*el*cw/sw;
+id vwupua = -i_*el;
+id vwuaup = -i_*el;
+
+************************************
+
+#ifdef `GAUGEZ'
+  id vhuzuz = -i_*el*MW*xiqz/2/sw/cw^2;
+  id vguzu  =  i_*el*MW*xiqz/2/sw/cw;
+#endif
+
+#ifndef `GAUGEZ'
+  id vhuzuz = -i_*el*MW/2/sw/cw^2;
+  id vguzu  =  i_*el*MW/2/sw/cw;
+#endif
+
+************************************
+
+#ifdef `GAUGEW'
+  id vguuz   =  i_*el*MW*xiqw*(sw^2 - cw^2)/2/sw/cw;
+  id vhupup  = -i_*el*MW*xiqw/2/sw;
+  id vhumum  = -i_*el*MW*xiqw/2/sw;
+  id vg0upup =   1*el*MW*xiqw/2/sw;
+  id vg0umum =  -1*el*MW*xiqw/2/sw;
+  id vguua   =  i_*el*MW*xiqw;
+#endif
+
+#ifndef `GAUGEW'
+  id vguuz   =  i_*el*MW*(sw^2 - cw^2)/2/sw/cw;
+  id vhupup  = -i_*el*MW/2/sw;
+  id vhumum  = -i_*el*MW/2/sw;
+  id vg0upup =     el*MW/2/sw;
+  id vg0umum =    -el*MW/2/sw;
+  id vguua   =  i_*el*MW;
+#endif
+
+id gaugeg = 1 - xiqg;
+id gaugea = 1 - xiqa;
+id gaugeg = 1 - xiqg;
+id gaugew = 1 - xiqw;
+id gaugez = 1 - xiqz;
+
+id M8^2  = xiqw*MW^2;
+id M10^2 = xiqz*MZ^2;
+
+*--#] INSERTCOUPLINGS :
+
+* vim: syntax=form

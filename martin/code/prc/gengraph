@@ -1,0 +1,343 @@
+*******************************************************************
+* Copyright (C) 2009-2023 Joachim Brod, Emmanuel Stamou
+*
+* This file is part of MaRTIn.
+*
+* MaRTIn is lisenced under GPLv3. For further details see the AUTHORS
+* file in the main MaRTIn directory.
+*******************************************************************
+
+*******************************************************************
+*** insert Feynman rules and treat numerator **********************
+*******************************************************************
+
+* The generic propagator is
+* [pfunct](<field_index>,<dual-field_index>...,mom,<momentum>,mass,[m])
+* The generic fermion propagator has the following structure:
+* F(fermion,Antifermion,...)
+*
+* The generic vertex is
+* [vfunct](<field_index_1>,<field_index_2>,...)
+* The generic vertex involving fermions has the following structure:
+* Ff*(Antifermion, Fermion,...)
+*
+* This is defined in main.sty
+
+*******************************************************************
+*** treat counterterms
+*******************************************************************
+
+* sometimes we attach an external leg to indicate that this
+* vertex is a counterterm. The convention is that it's the last
+* leg of the vertex and that its momentum is qc. Here we will
+* remove this redundant information based on the name qc
+
+id dummycf?(?a, xx1?neg_, mom, ?b,  qc) = dummycf(?a, mom, ?b);
+id dummycf?(?a, xx1?neg_, mom, ?b, -qc) = dummycf(?a, mom, ?b);
+
+id qc = 0;
+
+argument;
+  id qc = 0;
+endargument;
+
+*******************************************************************
+*** treat zeros
+*******************************************************************
+
+* q0 is the zero momentum
+argument;
+  id q0 = 0;
+endargument;
+id q0 = 0;
+id dummycf?(?a,mom,?b,0,?c)=dummycf(?a,mom,?b,q0,?c);
+
+* M0 is the zero mass
+argument;
+  id M0 = 0;
+endargument;
+id M0 = 0;
+
+*******************************************************************
+*** Generic propagator- and vertex-functions
+*******************************************************************
+*
+* QGRAF delivers propagator- and vertex-functions their respective
+* form is:
+*
+* P = PropFunction(i1,i2,     mom, p,       mass, M)
+* V = VrtxFunction(i1,...,iN, mom, p1,...,pN)
+*
+* Before sticking vertices and propagators together we will generate
+* lorentz indices at every point independent of whether we are going
+* to need them or not. This will allow us to avoid treating separetely
+* special cases. After the treatment the propagator- and vertex-functions
+* will have the following form
+*
+* P = PropFunction(i1,i2,     lorentz, nu1,nu2,     mom, p,       mass, M)
+* V = VrtxFunction(i1,...,iN, lorentz, nu1,...,nuN, mom, p1,...,pN)
+*
+* After this Lorentz constractions can be uniformly treated. However, other
+* quantum numbers still need to be treated separately, e.g., colour, SU(2),
+* flavour,...
+
+id dummycf?(?x,mom,?y) = dummycf(?x,lorentz,?x,mom,?y);
+
+repeat;
+   id dummycf?(?a,lorentz,?b,xx1?pos_,?c,mom,?d) = dummycf(?a,lorentz,?b,npos(+xx1),?c,mom,?d);
+   id dummycf?(?a,lorentz,?b,xx1?neg_,?c,mom,?d) = dummycf(?a,lorentz,?b,nneg(-xx1),?c,mom,?d);
+endrepeat;
+
+repeat;
+   id dummycf?(?a,lorentz,?b,npos(xx1?),?c,mom,?d) = dummycf(?a,lorentz,?b,nnuu[xx1],?c,mom,?d);
+   id dummycf?(?a,lorentz,?b,nneg(xx1?),?c,mom,?d) = dummycf(?a,lorentz,?b,mmuu[xx1],?c,mom,?d);
+endrepeat;
+
+.sort
+
+*******************************************************************
+*** This is a good place to make indices for other quantum numbers
+*******************************************************************
+
+* I believe this should be done in the user-defined GROUPTHEORY set
+* for vertices with fermions this should be done here. For vertices
+* without vertices this can also be done later in INSERTVERTICES
+
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # GROUPTHEORY
+#enddo
+
+*******************************************************************
+*** The propagators
+*******************************************************************
+
+#do i = 1, `NM'
+  #include model_`MODEL`i'' # INSERTPROPAGATORS
+#enddo
+.sort
+
+
+*******************************************************************
+*** Now fermion lines will be treated
+*******************************************************************
+
+*******************************************************************
+*** write vertex inside the fermion lines
+*******************************************************************
+
+id Ff?fermion[aa](xx1?, xx2?, ?a,           lorentz, uu1?, uu2?, ?b, mom, ?c) =
+   Ff(            xx1,  xx2,  vertices[aa], lorentz,             ?b, mom, ?c) * vertices[aa];
+
+
+*******************************************************************
+*** Get the fermion lines into the right order
+*******************************************************************
+
+* The following procedure arranges the open Fermion lines.
+* All Fermion vertices should be contained in the set Ff.
+
+#$numnol = 0;
+#$numncl = 0;
+#$i = 0;
+.sort
+
+#do m = 1,1
+   if (    match(Ff?fermion(xx1?neg_, xx2?, ?a)));
+      $numnol  = {`$numnol' + 1};
+      $i       = {`$i' + 1};
+
+*     This is a trick to always have the same line number attached to the same
+*     external fermion for all  diagrams. So it's to avoid having one diagram
+*     being dl(1,j1,j2)*dl(2,j3,j4) and another dl(2,j1,j2)*dl(1,j3,j4)
+
+      id Ff?fermion(xx1?neg_,?a) = Ff(xx1,?a)*fakecf(xx1);
+      repeat id fakecf(xx1?)*fakecf(?a) = fakecf(xx1,?a);
+      id fakecf(?a) = fakecf(min_(?a));
+
+      id once Ff?fermion(xx1?neg_, xx2?, ?a)*fakecf(xx1?) = Ff(xx1, xx2, ?a)*dummycf(xx1, xx2);
+
+   elseif (match(Ff?fermion(xx1?pos_, xx2?, ?a)));
+      $numncl  = {`$numncl' + 1};
+      $i       = {`$i' + 1};
+
+      id once Ff?fermion(xx1?pos_, xx2?, ?a) = Ff(xx1, xx2, ?a)*dummycf(xx1, xx2);
+
+   endif;
+   .sort
+
+*  create the first FL`$i'
+   id Ff?fermion(xx1?, xx2?, ?a) * dummycf(xx1?, xx2?) = FL`$i'(xx1, xx2, ?a);
+
+*  now stick together all fermionvertices and propagators (order is important)
+   repeat;
+*     line x propagator
+      id FL`$i'(xx1?,xx2?,?a)*         F(xx2?,xx3?,?b) = FL`$i'(xx1,xx3,?a,prop,?b);
+*     line x line
+      id FL`$i'(xx1?,xx2?,?a)*Ff?fermion(xx2?,xx3?,?b) = FL`$i'(xx1,xx3,?a,?b);
+   endrepeat;
+
+   if (match(Ff?fermion(?a))) redefine m "0";
+   .sort
+*  #message `$numnol' `$numncl' `$i'
+#enddo
+
+#$nol = $numnol;
+#$ncl = {`$numnol'+`$numncl'};
+.sort
+
+#call printMessage(Diagram has `$nol' open fermion line(s) and `$numncl' closed fermion line(s))
+
+
+*******************************************************************
+*** Fermion labeling
+*******************************************************************
+
+* Tag closed fermion lines if needed
+
+#ifdef `CLLABEL'
+  #call printMessage(Closed-loop labelling is active)
+  #do i = {`$nol' + 1},`$ncl'
+     repeat,id FL`i'(?a, field, xx1?, ?b) = FL`i'(?a, ?b) * cl(`i', xx1) ;
+     repeat,id cl(`i', ?a) * cl(`i', ?b) = cl(`i', ?a, ?b) ;
+  #enddo
+  #do i = 1, `$nol'
+     repeat,id FL`i'(?a, field, xx1?, ?b) = FL`i'(?a, ?b) ;
+  #enddo
+#else
+  #do i = 1, `$ncl'
+     repeat,id FL`i'(?a, field, xx1?, ?b) = FL`i'(?a, ?b) ;
+  #enddo
+#endif
+
+
+*******************************************************************
+*** Insert Dirac structures
+*******************************************************************
+
+
+#do i = 1,`$ncl'
+   b FL`i';
+   .sort
+   Keep Brackets;
+
+   id FL`i'(xx1?, xx2?, ?a) = FL`i'(?a) * dummyspinor(`i', xx1, xx2);
+
+   repeat;
+
+*  first the model-dependent fermionic vertices
+   #do j = 1, `NM'
+      #include model_`MODEL`j'' # INSERTFERMIONVERTICES
+   #enddo
+
+*  fermion-fermion-vector
+   id FL`i'(?a,vVcoup?Vcoupv,      lorentz,uu1?,mom,v1?,v2?,v3?) =
+      FL`i'(?a)*g_(`i',uu1);
+
+   id FL`i'(?a,vVAcoup?VAcoupv[aa],lorentz,uu1?,mom,v1?,v2?,v3?) =
+      FL`i'(?a)*g_(`i',uu1)*(VAcouplv[aa]*PL`i'+VAcouprv[aa]*PR`i');
+
+*  fermion-fermion-scalar
+   id FL`i'(?a,vScoup?Scoupv,      lorentz,uu1?,mom,v1?,v2?,v3?) =
+      FL`i'(?a)*gi_(`i');
+
+*  fermion-fermion-scalar, chiral
+   id FL`i'(?a,vSAcoup?SAcoupv[aa],lorentz,uu1?,mom,v1?,v2?,v3?) =
+      FL`i'(?a)*(SAcouplv[aa]*PL`i'+SAcouprv[aa]*PR`i');
+
+*  propagators
+   id FL`i'(?a,prop,mom,v1?,mass,xx1?) = FL`i'(?a)*(g_(`i',v1)+gi_(`i')*xx1);
+
+   id FL`i' = 1;
+
+   endrepeat;
+
+   if(match(FL`i'(?a))) exit "failed to substitute the dirac algebra in line `i'. Unimplemented vertex?";
+
+.sort
+#enddo
+
+
+*******************************************************************
+*** substitute special vertices of your models
+*******************************************************************
+
+#do i = 1, `NM'
+   #include model_`MODEL`i'' # INSERTVERTICES
+#enddo
+
+*******************************************************************
+*** substitute remaining vertices with implemented generic structure
+*******************************************************************
+
+id dummycf?VVgen(  ?a,lorentz,?b,mom,?c) = dummycf(lorentz,?b,mom,?c);
+id dummycf?SSgen(  ?a,lorentz,?b,mom,?c) = dummycf(lorentz,?b,mom,?c);
+id dummycf?VSgen(  ?a,lorentz,?b,mom,?c) = dummycf(lorentz,?b,mom,?c);
+id dummycf?VVVgen( ?a,lorentz,?b,mom,?c) = dummycf(lorentz,?b,mom,?c);
+id dummycf?SVVgen( ?a,lorentz,?b,mom,?c) = dummycf(lorentz,?b,mom,?c);
+id dummycf?SSSgen( ?a,lorentz,?b,mom,?c) = dummycf(lorentz,?b,mom,?c);
+id dummycf?SSSSgen(?a,lorentz,?b,mom,?c) = dummycf(lorentz,?b,mom,?c);
+id dummycf?VVSSgen(?a,lorentz,?b,mom,?c) = dummycf(lorentz,?b,mom,?c);
+id dummycf?VVVVgen(?a,lorentz,?b,mom,?c) = dummycf(lorentz,?b,mom,?c);
+id dummycf?VSSgen( ?a,lorentz,?b,mom,?c) = dummycf(lorentz,?b,mom,?c);
+id dummycf?VGGgen( ?a,lorentz,?b,mom,?c) = dummycf(lorentz,?b,mom,?c);
+
+* VV
+id dummycf?VVgen[aa](lorentz,uu1?,uu2?,mom,v1?,v2?) =
+                                    + vVVgen1[aa]*d_(uu1,uu2)*v1.v1
+                                    + vVVgen2[aa]*d_(uu1,uu2)
+                                    + vVVgen3[aa]*v1(uu1)*v1(uu2);
+
+* SS
+id dummycf?SSgen[aa](lorentz,uu1?,uu2?,mom,v1?,v2?) =
+                                    + vSSgen1[aa]*v1.v1
+                                    + vSSgen2[aa];
+
+* VS
+id dummycf?VSgen[aa](lorentz,uu1?,uu2?,mom,v1?,v2?) =
+                                    + vVSgen1[aa]*v1(uu1);
+
+* VVV
+id dummycf?VVVgen[aa](lorentz,uu1?,uu2?,uu3?,mom,v1?,v2?,v3?) =
+                        vVVVgen[aa]*( d_(uu1,uu2)*(v2(uu3)-v1(uu3))
+                                    + d_(uu2,uu3)*(v3(uu1)-v2(uu1))
+                                    + d_(uu3,uu1)*(v1(uu2)-v3(uu2)));
+
+* SVV
+id dummycf?SVVgen[aa](lorentz,uu1?,uu2?,uu3?,mom,?a) = vSVVgen[aa]*d_(uu2,uu3);
+
+* SSS
+id dummycf?SSSgen[aa](?a)  = vSSSgen[aa];
+
+* SSSS
+id dummycf?SSSSgen[aa](?a) = vSSSSgen[aa];
+
+* VVSS
+id dummycf?VVSSgen[aa](lorentz,uu1?,uu2?,uu3?,uu4?,mom,?a) = vVVSSgen[aa]*d_(uu1,uu2);
+
+* VVVV
+id dummycf?VVVVgen[aa](lorentz,uu1?,uu2?,uu3?,uu4?, mom,?a) =
+                        vVVVVgen[aa]*(  2*d_(uu1,uu2)*d_(uu3,uu4)
+                                         -d_(uu2,uu3)*d_(uu1,uu4)
+                                         -d_(uu3,uu1)*d_(uu2,uu4));
+
+* VSS
+id dummycf?VSSgen[aa](lorentz,uu1?,uu2?,uu3?, mom,v1?,v2?,v3?) =
+                        vVSSgen[aa]*(v2(uu1)-v3(uu1));
+
+* VGG (ghost ghost)
+id dummycf?VGGgen[aa](lorentz,uu1?,uu2?,uu3?, mom,v1?,v2?,v3?) =
+                        vVGGgen[aa]*v2(uu1);
+
+
+*** treat the zero momentum q0
+
+argument;
+  id q0 = 0;
+endargument;
+id q0 = 0;
+
+.sort
+
+******************
+* vim: syntax=form
+******************

@@ -1,0 +1,239 @@
+*******************************************************************
+* Copyright (C) 2009-2020 Joachim Brod, Emmanuel Stamou
+*
+* This file is part of MaRTIn.
+*
+* MaRTIn is lisenced under GPLv3. For further details see the AUTHORS
+* file in the main MaRTIn directory.
+*******************************************************************
+
+************************************************
+*  vertices with fermions
+*  [Antifermion,fermion,other,...]
+************************************************
+
+*  with gluons
+  [fU,fu,g;vfunct='Ffg']
+  [fC,fc,g;vfunct='Ffg']
+  [fD,fd,g;vfunct='Ffg']
+  [fS,fs,g;vfunct='Ffg'] 
+  [fB,fb,g;vfunct='Ffg'] 
+  [fT,ft,g;vfunct='Ffg'] 
+
+*  with photons
+  [fU,fu,a;vfunct='Fuua']
+  [fC,fc,a;vfunct='Fcca']
+  [fT,ft,a;vfunct='Ftta'] 
+  [fD,fd,a;vfunct='Fdda']
+  [fS,fs,a;vfunct='Fssa'] 
+  [fB,fb,a;vfunct='Fbba'] 
+  [fE,fe,a;vfunct='Feea'] 
+  [fMu,fmu,a;vfunct='Fmumua'] 
+  [fTau,ftau,a;vfunct='Ftautaua'] 
+
+*  with z-bosons
+  [fU,fu,z;vfunct='Fuuz']
+  [fC,fc,z;vfunct='Fccz']
+  [fT,ft,z;vfunct='Fttz'] 
+  [fD,fd,z;vfunct='Fddz']
+  [fS,fs,z;vfunct='Fssz'] 
+  [fB,fb,z;vfunct='Fbbz'] 
+  [fE,fe,z;vfunct='Feez'] 
+  [fNue,fnue,z;vfunct='Fnuenuez']
+  [fMu,fmu,z;vfunct='Fmumuz'] 
+  [fNumu,fnumu,z;vfunct='Fnumunumuz']
+  [fTau,ftau,z;vfunct='Ftautauz'] 
+  [fNutau,fnutau,z;vfunct='Fnutaunutauz']
+
+*  with G0-goldstones
+  [fU,fu,G0;vfunct='FuuG']
+  [fC,fc,G0;vfunct='FccG']
+  [fT,ft,G0;vfunct='FttG'] 
+  [fD,fd,G0;vfunct='FddG']
+  [fS,fs,G0;vfunct='FssG'] 
+  [fB,fb,G0;vfunct='FbbG'] 
+
+  [fE,fe,G0;vfunct='FeeG'] 
+  [fMu,fmu,G0;vfunct='FmumuG']
+  [fTau,ftau,G0;vfunct='FtautauG']
+
+*  with higgs
+  [fU,fu,h;vfunct='Fuuh']
+  [fC,fc,h;vfunct='Fcch']
+  [fT,ft,h;vfunct='Ftth']
+  [fD,fd,h;vfunct='Fddh']
+  [fS,fs,h;vfunct='Fssh']
+  [fB,fb,h;vfunct='Fbbh']
+
+  [fE,fe,h;vfunct='Feeh'] 
+  [fMu,fmu,h;vfunct='Fmumuh'] 
+  [fTau,ftau,h;vfunct='Ftautauh'] 
+
+*  w coupling to fermions
+  [fU,fd,wp;vfunct='Fudwp']
+  [fD,fu,wm;vfunct='Fduwm'] 
+  [fU,fs,wp;vfunct='Fuswp']
+  [fS,fu,wm;vfunct='Fsuwm'] 
+  [fU,fb,wp;vfunct='Fubwp']
+  [fB,fu,wm;vfunct='Fbuwm']
+
+  [fC,fd,wp;vfunct='Fcdwp']
+  [fD,fc,wm;vfunct='Fdcwm'] 
+  [fC,fs,wp;vfunct='Fcswp']
+  [fS,fc,wm;vfunct='Fscwm'] 
+  [fC,fb,wp;vfunct='Fcbwp'] 
+  [fB,fc,wm;vfunct='Fbcwm']
+ 
+  [fT,fd,wp;vfunct='Ftdwp']
+  [fD,ft,wm;vfunct='Fdtwm'] 
+  [fT,fs,wp;vfunct='Ftswp']
+  [fS,ft,wm;vfunct='Fstwm'] 
+  [fT,fb,wp;vfunct='Ftbwp']
+  [fB,ft,wm;vfunct='Fbtwm'] 
+
+  [fE,fnue,wm;vfunct='Fenuewm']
+  [fNue,fe,wp;vfunct='Fnueewp']
+  [fMu,fnumu,wm;vfunct='Fmunumuwm']
+  [fNumu,fmu,wp;vfunct='Fnumumuwp']
+  [fTau,fnutau,wm;vfunct='Ftaunutauwm']
+  [fNutau,ftau,wp;vfunct='Fnutautauwp']
+
+* Gp, Gm coupling to fermions
+  [fU,fd,Gp;vfunct='FudGp']
+  [fD,fu,Gm;vfunct='FduGm'] 
+  [fU,fs,Gp;vfunct='FusGp']
+  [fS,fu,Gm;vfunct='FsuGm'] 
+  [fU,fb,Gp;vfunct='FubGp']
+  [fB,fu,Gm;vfunct='FbuGm']
+
+  [fC,fd,Gp;vfunct='FcdGp']
+  [fD,fc,Gm;vfunct='FdcGm'] 
+  [fC,fs,Gp;vfunct='FcsGp']
+  [fS,fc,Gm;vfunct='FscGm'] 
+  [fC,fb,Gp;vfunct='FcbGp'] 
+  [fB,fc,Gm;vfunct='FbcGm']
+
+  [fT,fd,Gp;vfunct='FtdGp']
+  [fD,ft,Gm;vfunct='FdtGm'] 
+  [fT,fs,Gp;vfunct='FtsGp']
+  [fS,ft,Gm;vfunct='FstGm'] 
+  [fT,fb,Gp;vfunct='FtbGp']
+  [fB,ft,Gm;vfunct='FbtGm'] 
+
+  [fE,fnue,Gm;vfunct='FenueGm']
+  [fNue,fe,Gp;vfunct='FnueeGp']
+  [fMu,fnumu,Gm;vfunct='FmunumuGm']
+  [fNumu,fmu,Gp;vfunct='FnumumuGp']
+  [fTau,fnutau,Gm;vfunct='FtaunutauGm']
+  [fNutau,ftau,Gp;vfunct='FnutautauGp']
+
+************************************************
+* vertices without fermions
+************************************************
+
+* gluon/QCD ghost interactions
+  [g,g,g;    vfunct='Vggg']
+  [Ug,ug,g;  vfunct='VUgugg']
+  [g,g,g,g;  vfunct='Vgggg']
+
+*  EW gauge bosons self interactios
+
+*  with mass eigenstates
+  [a,wp,wm;vfunct='VAWW'] 
+  [z,wp,wm;vfunct='VZWW']
+  [h,wp,wm;vfunct='VHWW'] 
+  [h,z,z;vfunct='VHZZ']
+  [h,h,h;vfunct='VHHH']
+
+*  with goldstones
+  [a,Gp,Gm;vfunct='VAGG']
+  [z,Gp,Gm;vfunct='VZGG']
+  [wp,Gm,G0;vfunct='VWGG']
+  [wm,Gp,G0;vfunct='VWGG']
+  [Gp,wm,z;vfunct='VGWZ']
+  [Gm,wp,z;vfunct='VGWZ']
+  [Gp,wm,a;vfunct='VGWA']
+  [Gm,wp,a;vfunct='VGWA']
+  [h,G0,G0;vfunct='VHGG']
+  [h,Gm,Gp;vfunct='VHGG']
+  [z,G0,h;vfunct='VZG0H']
+  [wp,Gm,h;vfunct='VWGmH']
+  [wm,Gp,h;vfunct='VWGpH']
+
+*  with ghosts and gauge bosons
+  [wp,Uwp,uz;vfunct='VWUpuz']
+  [wm,Uwm,uz;vfunct='VWUmuz']
+  [wp,Uz,uwm;vfunct='VWUzum']
+  [wm,Uz,uwp;vfunct='VWUzup']
+  [wp,Uwp,ua;vfunct='VWUpua']
+  [wm,Uwm,ua;vfunct='VWUmua']
+  [wp,Ua,uwm;vfunct='VWUaum']
+  [wm,Ua,uwp;vfunct='VWUaup']
+  [a,Uwp,uwp;vfunct='VAUpup']
+  [a,Uwm,uwm;vfunct='VAUmum']
+  [z,Uwp,uwp;vfunct='VZUpup']
+  [z,Uwm,uwm;vfunct='VZUmum']
+
+*  with ghosts and higgs
+  [h,Uz,uz;vfunct='VHUzuz']
+  [h,Uwp,uwp;vfunct='VHUpup']
+  [h,Uwm,uwm;vfunct='VHUmum']
+
+*  with ghosts and goldstones
+  [G0,Uwm,uwm;vfunct='VG0Umum']
+  [G0,Uwp,uwp;vfunct='VG0Upup']
+  [Gp,Uwp,uz;vfunct='VGUuz']
+  [Gm,Uwm,uz;vfunct='VGUuz']
+  [Gp,Uz,uwm;vfunct='VGUzu']
+  [Gm,Uz,uwp;vfunct='VGUzu']
+  [Gp,Uwp,ua;vfunct='VGUua']
+  [Gm,Uwm,ua;vfunct='VGUua']
+
+*  4 particle vertices
+  [wp,wm,Gp,Gm;vfunct='VWWGG'] 
+  [wp,wm,G0,G0;vfunct='VWWGG'] 
+  [a,a,Gp,Gm;vfunct='VAAGG']
+  [wp,wp,wm,wm;vfunct='VWWWW'] 
+  [wp,wm,z,z;vfunct='VWWZZ'] 
+  [wp,wm,a,a;vfunct='VWWAA'] 
+  [wp,wm,a,z;vfunct='VWWAZ'] 
+  [z,z,G0,G0;vfunct='VZZG0G0']
+  [z,z,Gp,Gm;vfunct='VZZGG']
+
+
+  [wm,a,Gp,G0;vfunct='VWAGpG0']
+  [wp,a,Gm,G0;vfunct='VWAGmG0']
+
+  [wm,z,Gp,G0;vfunct='VWZGpG0']
+  [wp,z,Gm,G0;vfunct='VWZGmG0']
+
+  [z,a,Gp,Gm;vfunct='VZAGG']
+
+  [Gp,Gm,Gp,Gm;vfunct='VGGGG']
+  [Gp,Gm,G0,G0;vfunct='VG0G0GG']
+  [G0,G0,G0,G0;vfunct='VG0G0G0G0']
+
+  [h,h,h,h;vfunct='VHHHH']
+  [wp,wm,h,h;vfunct='VWWHH']
+  [z,z,h,h;vfunct='VZZHH']
+  [h,h,Gp,Gm;vfunct='VHHGG']
+  [h,h,G0,G0;vfunct='VHHGG']
+  [wp,z,Gm,h;vfunct='VWZGH']
+  [wm,z,Gp,h;vfunct='VWZGH']
+  [wp,a,Gm,h;vfunct='VWAGH']
+  [wm,a,Gp,h;vfunct='VWAGH']
+
+**** the vertices VHZA, VZAHH, VZAG0G0, VAG0H can be
+**** omitted because they are zero without renorm.
+*  [h,z,a;vfunct='VHZA']
+*  [h,h,z,a;vfunct='VZAHH']
+*  [G0,z,a;vfunct='VAG0H']
+*  [G0,G0,z,a;vfunct='VZAG0G0']
+*
+**** the vertices VGUaum, VGUaup should not exist
+*  [Gp,Ua,uwm;vfunct='VGUaum']
+*  [Gm,Ua,uwp;vfunct='VGUaup']
+*
+****
+
+* vim: syntax=form

@@ -1,0 +1,388 @@
+*******************************************************************
+* Copyright (C) 2009-2023 Joachim Brod, Emmanuel Stamou
+*
+* This file is part of MaRTIn.
+*
+* MaRTIn is lisenced under GPLv3. For further details see the AUTHORS
+* file in the main MaRTIn directory.
+*******************************************************************
+
+*******************************************************************
+*                                                                 *
+* This program:                                                   *
+*                                                                 *
+* - does the tensor reduction for vanishing external momenta.     *
+*                                                                 *
+*******************************************************************
+
+* if you uncomment this it will use DT to compute
+* if you end up using it test it a bit because I
+* noticed that at order ep^3 it gives additional
+* zeta(2) factors, which I suspect are missing
+* in the explicit formulas
+
+#define EXPLICITTENSORREDUCTION
+
+
+if ( match(dummycf(?a)))  exit "This is tensorreduction_vac. No dummycf should appear here.";
+if ( match(dummycf1(?a))) exit "This is tensorreduction_vac. No dummycf1 should appear here.";
+if ( match(dummycf2(?a))) exit "This is tensorreduction_vac. No dummycf2 should appear here.";
+if ( match(fakecf(?a)) )  exit "This is tensorreduction_vac. No fakecf  should appear here.";
+if ( match(fakecf1(?a)))  exit "This is tensorreduction_vac. No fakecf1 should appear here.";
+if ( match(fakecf2(?a)))  exit "This is tensorreduction_vac. No fakecf2 should appear here.";
+if ( match(fakecf3(?a)))  exit "This is tensorreduction_vac. No fakecf3 should appear here.";
+
+*******************************************************************
+* Make Gam's and TR5's to tensors for things to work
+*******************************************************************
+#do LINE = 1,`$ncl'
+  #call convertGamTR5toTensor(`LINE')
+#enddo
+
+
+*******************************************************************
+*** Tensorreduction of internal (integration-) momenta. ***********
+*******************************************************************
+
+* First use the fact that the vacuum integrals are symmetric
+* under p1 -> -p1, p2 -> -p2:
+
+#if (`LOOP' == 1)
+  if (count(p1+vfd,1) != multipleof(2)) discard;
+#endif
+
+#if (`LOOP' == 2)
+  if (count(p1+vfd,1,p2+vfd,1) != multipleof(2)) discard;
+#endif
+
+
+*******************************************************************
+*** make indices explicit *****************************************
+*******************************************************************
+
+id d_(p?pint,q?qext) = dd(p,q);
+
+.sort
+dimension 0;
+
+#do i = 1,`LOOP'
+  totensor !pint, p`i', ttp`i';
+  repeat id ttp`i'(?a,uu1?,uu2?) = ttp`i'(?a)*ttp`i'(uu1)*ttp`i'(uu2);
+  id ttp`i' = 1;
+  tovector, ttp`i', p`i';
+#enddo
+
+#do i = 1,4
+  totensor !qext, q`i', ttq`i';
+  repeat id ttq`i'(?a,uu1?,uu2?) = ttq`i'(?a)*ttq`i'(uu1)*ttq`i'(uu2);
+  id ttq`i' = 1;
+  tovector, ttq`i', q`i';
+#enddo
+
+id dd(mu1?,mu2?) = d_(mu1,mu2);
+
+.sort
+
+*******************************************************************
+*** Bring back GamLINE notation
+*******************************************************************
+#do LINE = 1,`$ncl'
+  #call convertTensortoGamTR5(`LINE')
+#enddo
+
+
+*******************************************************************
+*** Protect pieces that need no treatment
+*******************************************************************
+
+b p1,p2,p3,ep;
+.sort
+
+collect TEMP1,TEMP2;
+
+id p1?pint.p2?pint = TEMP3(p1.p2);
+repeat id TEMP3(xx1?)*TEMP3(xx2?) = TEMP3(xx1*xx2);
+
+*******************************************************************
+*** For the most case we have explicit results that we can use
+*** without using formulas from DT or Collins. To keep the
+*** computational time as short as possible we first use these
+*** explicit expressions
+*******************************************************************
+
+*** introduce a counter
+id p?pint(mu1?) = counter*p(mu1);
+
+#ifdef `EXPLICITTENSORREDUCTION'
+*** do the tensor reduction for the implemented cases
+
+*** 12345678 **********************************
+#if ( `DIMENSION' == 4 )
+if ( count(counter, 1) == 8 );
+id counter^8*
+   v1?(ind1?)*v2?(ind2?)*v3?(ind3?)*v4?(ind4?)*
+   v5?(ind5?)*v6?(ind6?)*v7?(ind7?)*v8?(ind8?) =
+   #include red8
+endif;
+#endif
+
+*** 123456 ************************************
+#if ( `DIMENSION' == 4 )
+if ( count(counter, 1) == 6 );
+id counter^6*
+   v1?(ind1?)*v2?(ind2?)*v3?(ind3?)*v4?(ind4?)*
+   v5?(ind5?)*v6?(ind6?) =
+   #include red6
+endif;
+#endif
+
+*** 1234 **************************************
+if ( count(counter, 1) == 4 );
+id counter^4*
+   v1?(ind1?)*v2?(ind2?)*v3?(ind3?)*v4?(ind4?) =
+   #include red4
+endif;
+
+*** 12 ****************************************
+if ( count(counter, 1) == 2 );
+id counter^2*
+   v1?(ind1?)*v2?(ind2?) =
+   #include red2
+endif;
+
+*** substitute nom's deno's and epfkts ********
+
+id epfkt(xx1?,...,xx7?) = xx1 + ... + xx7;
+
+* Expand up to ep^6 because this is how many terms Joachim included
+* in his epfkt
+
+#call expandep(6)
+#endif
+
+if (match(counter));
+  id counter^xx1?$nump = 1;
+endif;
+.sort
+
+
+***************************************************************
+*** Implementation of DT 2loop tensor reduction
+*** hep-ph/9511261v1 equation 42
+***************************************************************
+#if `$nump' > 0
+#message Found a product of `$nump' loop momenta to reduce. Applying DT reduction.
+
+#if ( (`LOOP' > 2) && (`$nump' > 0 ) )
+exit "Presently the DT tensoreduction keeps terms up \
+     to ep^2, so for loops higher than 2loop you need \
+     to revisit some parts of it. Also the DT reduction \
+     implemented below is only correct for 2loops so at \
+     any case you cannot apply it.";
+#endif
+
+*******************************************************************
+*** make the tensor function for p1 and p2 ************************
+*******************************************************************
+
+multiply cftensorp1 * cftensorp2;
+
+repeat id p1(mu0?)*cftensorp1(?x) = cftensorp1(mu0, ?x);
+repeat id p2(mu0?)*cftensorp2(?x) = cftensorp2(mu0, ?x);
+
+id cftensorp1(?x)*cftensorp2(?y) = cftensorp1(?x)*cftensorp2(?y) * dummycf(nargs_(?x), nargs_(?y));
+
+******************************************************************************
+* if only one loop momentum appears in the product of loop momenta
+* we can use the 1loop formula 4.3.11 from Collins even in the 2loop case.
+* 4.3.11 from Collins is equivalent to the eq. 42 for the case of N2=0
+* To prove this be careful about what Collins and DT mean by "all permutations"
+* Tipp: they dont mean the same.
+******************************************************************************
+
+* the p1 case
+id cftensorp1(?mu1)*cftensorp2*dummycf(Num1?,0) =
+                               2^(-Num1/2)*GAMMA(`DIMENSION'/2, -ep)*GAMMAINV(`DIMENSION'/2 + Num1/2, -ep)*
+                               dd_(?mu1)*
+                               (p1.p1)^(Num1/2);
+
+* the p2 case
+id cftensorp2(?mu2)*cftensorp1*dummycf(0,Num2?) =
+                               2^(-Num2/2)*GAMMA(`DIMENSION'/2, -ep)*GAMMAINV(`DIMENSION'/2 + Num2/2, -ep)*
+                               dd_(?mu2)*
+                               (p2.p2)^(Num2/2);
+
+.sort
+
+******************************************************************************
+* Now we implement eq 42 of DT
+******************************************************************************
+
+id dummycf(NUM1?, NUM2?) = dummycf(NUM1, NUM2) * sum_(xx3, 0, min_(NUM1,NUM2), fakecf(NUM1/2-xx3/2, NUM2/2-xx3/2, xx3));
+
+id fakecf(?x,num1?!pos0_,?y) = 0;
+
+.sort
+
+id dummycf(NUM1?,NUM2?)*fakecf(num1?,num2?,num3?) =
+        2^(-NUM1-NUM2) * fac_(num3) * invfac_(num1) * invfac_(num2) *
+           Pochhammer(`DIMENSION'/2,    -ep, num3)*
+        invPochhammer(`DIMENSION'/2-1,  -ep, num3)*
+        invPochhammer(`DIMENSION'-2,  -2*ep, num3)*
+        invPochhammer(`DIMENSION'/2,    -ep, num1+num3)*
+        invPochhammer(`DIMENSION'/2,    -ep, num2+num3)*
+        fakecf1(NUM1/2) * fakecf2(NUM2/2) *
+        CDT(num3) *
+        dummycf(NUM1,NUM2) * fakecf(num1,num2,num3);
+
+id CDT(num3?even_) = sum_(xx1, 0, num3/2,
+                          i_^(2*xx1) * Pochhammer(`DIMENSION'/2-1, -ep, num3-xx1) *
+                          invfac_(xx1) * invfac_(num3-2*xx1) *
+                          2^(num3-2*xx1) *
+                          fakecf3(num3-2*xx1) *
+                          fakecf1(xx1-num3/2) *
+                          fakecf2(xx1-num3/2));
+
+id CDT(num3?odd_) = sum_(xx1, 0, num3/2-1/2,
+                          i_^(2*xx1) * Pochhammer(`DIMENSION'/2-1, -ep, num3-xx1) *
+                          invfac_(xx1) * invfac_(num3-2*xx1) *
+                          2^(num3-2*xx1) *
+                          fakecf3(num3-2*xx1) *
+                          fakecf1(xx1-num3/2) *
+                          fakecf2(xx1-num3/2));
+
+id fakecf1(?x,xx1?)*fakecf1(xx2?) = fakecf1(?x, xx1+xx2);
+id fakecf2(?x,xx1?)*fakecf2(xx2?) = fakecf2(?x, xx1+xx2);
+id fakecf3(?x,xx1?)*fakecf3(xx2?) = fakecf3(?x, xx1+xx2);
+id fakecf1(xx1?) = p1.p1^xx1;
+id fakecf2(xx2?) = p2.p2^xx2;
+id fakecf3(xx3?) = p1.p2^xx3;
+
+.sort
+
+id fakecf(num1?, num2?, num3?) = fakecf1(num3);
+
+id dummycf(NUM1?, NUM2?) = dummycf(NUM1, NUM2) * sum_(xx3, 0, min_(NUM1,NUM2), fakecf2(NUM1/2-xx3/2, NUM2/2-xx3/2, xx3));
+
+id fakecf2(?x,num1?!pos0_,?y) = 0;
+
+* the p1.p1 case
+id fakecf2(num1?,num2?,num3?) * cftensorp1(?a) =
+   fakecf2(num1, num2, num3 ) * distrib_(1,2*num1,cftensorp1,dummycf1,?a);
+id dummycf1 = 1;
+id cftensorp1(?x) = dd_(?x);
+
+* the p2.p2 case
+id fakecf2(num1?,num2?,num3?) * cftensorp2(?a) =
+   fakecf2(num1, num2, num3 ) * distrib_(1,2*num2,cftensorp2,dummycf2,?a);
+id dummycf2 = 1;
+id cftensorp2(?x) = dd_(?x);
+
+* the p1.p2 case
+id dummycf1(?a) = perm_(dummycf1, ?a);
+
+repeat id dummycf1(?a, mu1?) * dummycf2(?b, mu2?) = dummycf1(?a) * dummycf2(?b) * d_(mu1,mu2);
+id dummycf1 = 1;
+id dummycf2 = 1;
+
+.sort
+
+id dummycf(NUM1?,NUM2?)*fakecf1(Num3?)*fakecf2(num1?,num2?,num3?) =
+    2^(NUM1/2+NUM2/2) * i_^(num3-Num3) * fac_(num1) * fac_(num2) * invfac_(Num3/2-num3/2) * theta_(Num3-num3) *
+    Pochhammer(`DIMENSION'/2-1,-ep,Num3/2+num3/2);
+
+id    Pochhammer(?x, 0) = 1;
+id invPochhammer(?x, 0) = 1;
+id    Pochhammer(xx1?,xx2?,xx3?) =    GAMMA(xx1+xx3, xx2)*GAMMAINV(xx1,xx2);
+id invPochhammer(xx1?,xx2?,xx3?) = GAMMAINV(xx1+xx3, xx2)*GAMMA(   xx1,xx2);
+
+.sort
+
+*** Expand Gamma functions ****************************************
+
+* The tensor reduction will never produce GAMMA functions that diverge for
+* small epsilon (at least for d=4,3). This is equivalent to saying that
+* the above programm will never generate GAMMA(0, sth) or
+* GAMMA(negative integer, sth). Test this:
+
+if ( match(   GAMMA(xx1?neg0_,xx2?)) ) exit "This is tensorreduction_vac. How did you get a divergence in the tensor reduction?";
+if ( match(GAMMAINV(xx1?neg0_,xx2?)) ) exit "This is tensorreduction_vac. GAMMAINV(x,y) with x<=0 is not divergent but should not have been produced.";
+
+* It is therefore now easy to expand them in epsilon. Since the above is
+* tensor reduction is anyway only good for the two-loop case and epsilon
+* is anyway defined such that ep^3 = 0 we only keep terms up to this order.
+
+#do m=1,1
+  id GAMMA(?x)*GAMMAINV(?x) = 1;
+
+  id GAMMA(   1/2,xx1?) = sqrt_(pi) + sqrt_(pi) * Polygamma(0,1/2) * xx1
+                             + 1/4 * ( sqrt_(pi)*pi^2 + 2*sqrt_(pi) * Polygamma(0,1/2)^2 ) * xx1^2;
+
+  id GAMMAINV(1/2,xx1?) = 1/sqrt_(pi) - 1/sqrt_(pi) * Polygamma(0,1/2) * xx1
+                              + 1/4/sqrt_(pi) * ( - pi^2 + 2*Polygamma(0,1/2)^2 ) * xx1^2;
+
+  id GAMMA(1,xx1?)  = 1 + 1/2*xx1^2*Zeta(2);
+  id GAMMA(2,xx1?)  = 1 + xx1 + (xx1^2*Zeta(2))/2;
+  id GAMMA(3,xx1?)  = 2 + 3*xx1 + xx1^2*(1 + Zeta(2));
+  id GAMMA(4,xx1?)  = 6 + 11*xx1 + xx1^2*(6 + 3*Zeta(2));
+  id GAMMA(5,xx1?)  = 24 + 50*xx1 + xx1^2*(35 + 12*Zeta(2));
+  id GAMMA(6,xx1?)  = 120 + 274*xx1 + xx1^2*(225 + 60*Zeta(2));
+  id GAMMA(7,xx1?)  = 720 + 1764*xx1 + xx1^2*(1624 + 360*Zeta(2));
+  id GAMMA(8,xx1?)  = 5040 + 13068*xx1 + xx1^2*(13132 + 2520*Zeta(2));
+  id GAMMA(9,xx1?)  = 40320 + 109584*xx1 + xx1^2*(118124 + 20160*Zeta(2));
+  id GAMMA(10,xx1?) = 362880 + 1026576*xx1 + xx1^2*(1172700 + 181440*Zeta(2));
+  id GAMMA(11,xx1?) = 3628800 + 10628640*xx1 + xx1^2*(12753576 + 1814400*Zeta(2));
+  id GAMMA(12,xx1?) = 39916800 + 120543840*xx1 + xx1^2*(150917976 + 19958400*Zeta(2));
+  id GAMMA(13,xx1?) = 479001600 + 1486442880*xx1 + xx1^2*(1931559552 + 239500800*Zeta(2));
+  id GAMMA(14,xx1?) = 6227020800 + 19802759040*xx1 + xx1^2*(26596717056 + 3113510400*Zeta(2));
+  id GAMMA(15,xx1?) = 87178291200 + 283465647360*xx1 + xx1^2*(392156797824 + 43589145600*Zeta(2));
+  id GAMMA(16,xx1?) = 1307674368000 + 4339163001600*xx1 + xx1^2*(6165817614720 + 653837184000*Zeta(2));
+  id GAMMA(17,xx1?) = 20922789888000 + 70734282393600*xx1 + xx1^2*(102992244837120 + 10461394944000*Zeta(2));
+  id GAMMA(18,xx1?) = 355687428096000 + 1223405590579200*xx1 + xx1^2*(1821602444624640 + 177843714048000*Zeta(2));
+  id GAMMA(19,xx1?) = 6402373705728000 + 22376988058521600*xx1 + xx1^2*(34012249593822720 + 3201186852864000*Zeta(2));
+  id GAMMA(20,xx1?) = 121645100408832000 + 431565146817638400*xx1 + xx1^2*(668609730341153280 + 60822550204416000*Zeta(2));
+
+  id GAMMAINV(1,xx1?)  = 1-1/2*xx1^2*Zeta(2);
+  id GAMMAINV(2,xx1?)  = 1 - xx1 + xx1^2*(1 - Zeta(2)/2);
+  id GAMMAINV(3,xx1?)  = 1/2 - 3/4*xx1 + xx1^2*(7/8 - Zeta(2)/4);
+  id GAMMAINV(4,xx1?)  = 1/6 - 11/36*xx1 + xx1^2*(85/216 - Zeta(2)/12);
+  id GAMMAINV(5,xx1?)  = 1/24 - 25/288*xx1 + xx1^2*(415/3456 - Zeta(2)/48);
+  id GAMMAINV(6,xx1?)  = 1/120 - 137/7200*xx1 + xx1^2*(12019/432000 - Zeta(2)/240);
+  id GAMMAINV(7,xx1?)  = 1/720 - 49/14400*xx1 + xx1^2*(13489/2592000 - Zeta(2)/1440);
+  id GAMMAINV(8,xx1?)  = 1/5040 - 121/235200*xx1 + xx1^2*(726301/889056000 - Zeta(2)/10080);
+  id GAMMAINV(9,xx1?)  = 1/40320 - 761/11289600*xx1 + xx1^2*(3144919/28449792000 - Zeta(2)/80640);
+  id GAMMAINV(10,xx1?) = 1/362880 - 7129/914457600*xx1 + xx1^2*(30300391/2304433152000 - Zeta(2)/725760);
+  id GAMMAINV(11,xx1?) = 1/3628800 - 7381/9144576000*xx1 + xx1^2*(32160403/23044331520000 - Zeta(2)/7257600);
+  id GAMMAINV(12,xx1?) = 1/39916800 - 83711/1106493696000*xx1 + xx1^2*(4102360483/30672005253120000 - Zeta(2)/79833600);
+  id GAMMAINV(13,xx1?) = 1/479001600 - 86021/13277924352000*xx1 + xx1^2*(4301068993/368064063037440000 - Zeta(2)/958003200);
+  id GAMMAINV(14,xx1?) = 1/6227020800 - 1145993/2243969215488000*xx1 + xx1^2*(758647585777/808636746493255680000 - Zeta(2)/12454041600);
+  id GAMMAINV(15,xx1?) = 1/87178291200 - 1171733/31415569016832000*xx1 + xx1^2*(112686856171/1617273492986511360000 - Zeta(2)/174356582400);
+  id GAMMAINV(16,xx1?) = 1/1307674368000 - 1195757/471233535252480000*xx1 + xx1^2*(476696711/99016744468561920000 - Zeta(2)/2615348736000);
+  id GAMMAINV(17,xx1?) = 1/20922789888000 - 2436559/15079473128079360000*xx1 + xx1^2*(96568406789/310516510653410181120000 - Zeta(2)/41845579776000);
+  id GAMMAINV(18,xx1?) = 1/355687428096000 - 42142223/4357967734014935040000*xx1 + xx1^2*(28776062218037/1525567616840204219842560000 - Zeta(2)/711374856192000);
+  id GAMMAINV(19,xx1?) = 1/6402373705728000 - 14274301/26147806404089610240000*xx1 + xx1^2*(29608882035581/27460217103123675957166080000 - Zeta(2)/12804747411456000);
+  id GAMMAINV(20,xx1?) = 1/121645100408832000 - 275295799/9439358111876349296640000*xx1 + xx1^2*(1568274265798307/26907089872903613341457448960000 - Zeta(2)/243290200817664000);
+
+* recursion for unimplemented cases
+  multiply counter;
+  id counter*GAMMA(   xx1?!{,1},xx2?) = GAMMA(   xx1-1,xx2) * (xx1-1+xx2);
+  id counter*GAMMAINV(xx1?!{,1},xx2?) = GAMMAINV(xx1-1,xx2) * 1/(xx1-1) * ( 1 - xx2/(xx1-1) + (xx2/(xx1-1))^2 );
+  id counter = 1;
+
+  if (match(GAMMA(?x)) || match(GAMMAINV(?y))) redefine m "0";
+  .sort
+#enddo
+#endif
+
+
+id TEMP1(xx1?) = xx1;
+id TEMP2(xx1?) = xx1;
+id TEMP3(xx1?) = xx1;
+
+.sort
+dimension d;
+#call printMessage(Tensor reduction of momenta done)
+
+******************
+* vim: syntax=form
+******************

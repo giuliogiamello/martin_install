@@ -1,0 +1,185 @@
+*******************************************************************
+* Copyright (C) 2009-2023 Joachim Brod, Emmanuel Stamou
+*
+* This file is part of MaRTIn.
+*
+* MaRTIn is lisenced under GPLv3. For further details see the AUTHORS
+* file in the main MaRTIn directory.
+*******************************************************************
+
+
+*** Insertion of integrals ****************************************
+
+* The 1/16/pi^2 factors are multiplied later in main.frm.
+* The Eulergamma - terms are dropped during the expansion of the Gamma functions.
+* The log(4pi) terms are implicitly dropped by the definition of eM.
+* All in all this is more or less adapted to the MSbar scheme.
+
+*** One-loop integrals ***
+
+if (
+    ( match(Intpm(p1,M1?!{,0})) ||
+      match(Intpm(p2,M2?!{,0}))
+    ) &&
+    ( match(Intpm(p1,p2,M3?)) == 0)
+    );
+
+  id Intpm(p1,M1?!{,0}) = Intpm(p1,M1)*cp1;
+  id Intpm(p2,M1?!{,0}) = Intpm(p2,M1)*cp2;
+
+  id once Intpm(p1,M1?!{,0}) = Int1l(p1,M1);
+  id once Intpm(p2,M1?!{,0}) = Int1l(p2,M1);
+
+  id cp1^xx1?*Int1l(p1,?a) = Int1l(p1,?a,xx1);
+  id cp2^xx2?*Int1l(p2,?a) = Int1l(p2,?a,xx2);
+
+  id Intpm(p1,M1?!{,0}) = 1;
+  id Intpm(p2,M1?!{,0}) = 1;
+endif;
+.sort
+
+id only Int1l(p1,M1?,xx1?) = i_*M1^4/(M1^xx1)^2*eM(M1)*(-1)^(xx1)*GAMMA(xx1-`DIMENSION'/2,ep)*GAMMAINV(xx1,0);
+id only Int1l(p2,M2?,xx2?) = i_*M2^4/(M2^xx2)^2*eM(M2)*(-1)^(xx2)*GAMMA(xx2-`DIMENSION'/2,ep)*GAMMAINV(xx2,0);
+
+*#do i = 1,20
+*  if (count(intp1m`i',1) != 0) exit "insertion of one-loop integrals not successfull";
+*  if (count(intp2m`i',1) != 0) exit "insertion of one-loop integrals not successfull";
+*#enddo
+
+*** Two-loop BMU-type integrals ***
+#if ( `DIMENSION' == 4 )
+id IntBMUd(xx1?,xx2?,xx3?,M?,M?,0) = (M^2)^(4-xx1-xx2-xx3)*eM(M)^2*
+                                     GAMMA(1,ep)*GAMMA(1,ep)*(-1)^(xx1+xx2+xx3+1)*
+                                     GAMMA(2-xx3,-ep)*GAMMAINV(2,-ep)*GAMMA(-2+xx1+xx3,ep)*
+                                     GAMMAINV(1,ep)*GAMMA(-2+xx2+xx3,ep)*GAMMAINV(1,ep)*
+                                     GAMMAINV(xx1,0)*GAMMAINV(xx2,0)*
+                                     GAMMA(xx1+xx2+xx3-4,2*ep)*GAMMAINV(xx1+xx2+2*xx3-4,2*ep);
+
+
+id IntBMUd(xx1?,xx2?,xx3?,M?,0,0) = (M^2)^(4-xx1-xx2-xx3)*eM(M)^2*
+                                     GAMMA(1,ep)*GAMMA(1,ep)*(-1)^(xx1+xx2+xx3+1)*
+                                     GAMMA(xx1+xx2+xx3-4,2*ep)*GAMMAINV(1,2*ep)*
+                                     GAMMA(xx2+xx3-2,ep)*GAMMAINV(1,ep)*GAMMA(2-xx2,-ep)*GAMMAINV(1,-ep)*
+                                     GAMMA(2-xx3,-ep)*GAMMAINV(1,-ep)*
+                                     GAMMAINV(xx1,0)*GAMMAINV(xx2,0)*GAMMAINV(xx3,0)*deno(1,-1)*
+                                     (1+1/3*pi^2*ep^2);
+
+
+id IntBMU(1,1,1,M1?,M2?,0) = (M1^2)*eM(M1)^2*GAMMA(1,ep)*GAMMA(1,ep)*
+                                         1/2*deno(1,-1)*deno(1,-2)*
+                                         ((-1-M2^2/M1^2)/ep^2 + 2*(M2^2/M1^2)*Log(M2^2/M1^2)/ep
+                                           + (1 - 2*(M2^2/M1^2))*(Log(M2^2/M1^2))^2
+                                           + 2*(1 - M2^2/M1^2)*Li2((M2^2-M1^2)/M2^2) );
+#endif
+
+#if ( `DIMENSION' == 3 )
+id IntBMUd(xx1?,xx2?,xx3?,M?,M?,0) = (M^2)^(4-xx1-xx2-xx3)*eM(M)^2*
+                                     GAMMA(3/2,ep)*GAMMA(3/2,ep)*(-1)^(xx1+xx2+xx3+1)*
+                                     GAMMA(3/2-xx3,-ep)*GAMMAINV(3/2,-ep)*GAMMA(-3/2+xx1+xx3,ep)*
+                                     GAMMAINV(3/2,ep)*GAMMA(-3/2+xx2+xx3,ep)*GAMMAINV(3/2,ep)*
+                                     GAMMAINV(xx1,0)*GAMMAINV(xx2,0)*
+                                     GAMMA(xx1+xx2+xx3-3,2*ep)*GAMMAINV(xx1+xx2+2*xx3-3,2*ep);
+
+
+id IntBMUd(xx1?,xx2?,xx3?,M?,0,0) = (M^2)^(4-xx1-xx2-xx3)*eM(M)^2*
+                                     GAMMA(3/2,ep)*GAMMA(3/2,ep)*(-1)^(xx1+xx2+xx3+1)*
+                                     GAMMA(xx1+xx2+xx3-3,2*ep)*GAMMAINV(2,2*ep)*
+                                     GAMMA(xx2+xx3-3/2,ep)*GAMMAINV(3/2,ep)*GAMMA(3/2-xx2,-ep)*
+                                     GAMMAINV(1/2,-ep)*
+                                     GAMMA(3/2-xx3,-ep)*GAMMAINV(1/2,-ep)*
+                                     GAMMAINV(xx1,0)*GAMMAINV(xx2,0)*GAMMAINV(xx3,0)*deno(1/2,-1)*
+                                     (1+1/3*pi^2*ep^2);
+
+
+id IntBMU(1,1,1,M1?,M2?,0) = (M1^2)*eM(M1)^2*GAMMA(3/2,ep)*GAMMA(3/2,ep)*
+                                         1/2*deno(1/2,-1)*deno(0,-2)*
+                                         ((-1-M2^2/M1^2)/ep^2 + 2*(M2^2/M1^2)*Log(M2^2/M1^2)/ep
+                                           + (1 - 2*(M2^2/M1^2))*(Log(M2^2/M1^2))^2
+                                           + 2*(1 - M2^2/M1^2)*Li2((M2^2-M1^2)/M2^2) );
+#endif
+.sort
+
+*** Two-loop DT-type integrals ***
+
+* for the following representations of the integrals to be correct,
+* Mk - in IntDT(1,1,1,Mi,Mj,Mk) - must be the largest mass such that
+* Mi <= Mk and Mj <= Mk. This is a problem if you don't know a priori
+* the mass hierarchies.
+
+id IntDT(1,1,1,M1?,M2?,M3?) = aa*IntDT(1,1,1,M1,M2,M3);
+id many aa*IntDT(1,1,1,M1?,M1?,M1?) = IntDT(1,1,1,M1,M1,M1);
+
+#define NEEDAMASS "0"
+if (count(aa,1) > 0);
+   redefine NEEDAMASS "1";
+   id aa = 1;
+endif;
+.sort
+
+#if (`NEEDAMASS' == 1)
+   #call printMessage(Applying FOLD "AMASSES" for the mass hierarchies)
+
+   #do i = 1, `NM'
+   #include model_`MODEL`i'' # AMASSES
+   #enddo
+
+   set numorder: 1,...,`$massnum';
+   .sort
+
+   id IntDT(1,1,1,Mi?massorder[xx1],Mj?massorder[xx2],Mk?massorder[xx3]) =
+   			IntDT(1,1,1,dummycf(numorder[xx1])*dummycf(numorder[xx2])*dummycf(numorder[xx3]));
+
+
+   id IntDT(1,1,1,dummycf(xx1?)*dummycf(xx2?)*dummycf(xx3?))=
+   			IntDT(1,1,1,massorder[xx1],massorder[xx2],massorder[xx3]);
+
+#endif
+.sort
+
+* Now replace integrals
+
+#if ( `DIMENSION' == 4 )
+id IntDT(1,1,1,M?,M?,M?) = M^2*eM(M)^2*GAMMA(1,ep)*GAMMA(1,ep)*deno(1,-1)*deno(1,-2)*(-3/2/ep^2+27/2*S2);
+.sort
+
+id IntDT(1,1,1,M1?,M1?,M?) = M1^2*eM(M1)^2*GAMMA(1,ep)*GAMMA(1,ep)*deno(1,-1)*deno(1,-2)
+			      *(- (1+(M^2/2/M1^2))/ep^2
+				+ (M^2/M1^2)*(Log(M^2/M1^2))/ep
+				- (M^2/2/M1^2)*(Log(M^2/M1^2))^2
+				+ 2*(1 - M^2/4/M1^2)*DTPHI1(M^2/4/M1^2));
+
+id IntDT(1,1,1,M1?,M?,M1?) = M1^2*eM(M1)^2*GAMMA(1,ep)*GAMMA(1,ep)*deno(1,-1)*deno(1,-2)
+			      *(- (1+(M^2/2/M1^2))/ep^2
+				+ (M^2/M1^2)*(Log(M^2/M1^2))/ep
+				- (M^2/2/M1^2)*(Log(M^2/M1^2))^2
+				+ 2*(1 - M^2/4/M1^2)*DTPHI1(M^2/4/M1^2));
+
+id IntDT(1,1,1,M?,M1?,M1?) = M1^2*eM(M1)^2*GAMMA(1,ep)*GAMMA(1,ep)*deno(1,-1)*deno(1,-2)
+			      *(- (1+(M^2/2/M1^2))/ep^2
+				+ (M^2/M1^2)*(Log(M^2/M1^2))/ep
+				- (M^2/2/M1^2)*(Log(M^2/M1^2))^2
+				+ 2*(1 - M^2/4/M1^2)*DTPHI1(M^2/4/M1^2));
+
+.sort
+
+id IntDT(1,1,1,Mi?,Mj?,M1?) = M1^2*eM(M1)^2*GAMMA(1,ep)*GAMMA(1,ep)*deno(1,-1)*deno(1,-2)/2
+                                *(- (1 + Mi^2/M1^2 + Mj^2/M1^2)/ep^2
+                               + 2*((Mi^2/M1^2)*Log(Mi^2/M1^2) + (Mj^2/M1^2)*Log(Mj^2/M1^2))/ep
+                               - (Mi^2/M1^2)*(Log(Mi^2/M1^2))^2 - (Mj^2/M1^2)*(Log(Mj^2/M1^2))^2
+                               + (1 - Mi^2/M1^2 - Mj^2/M1^2)*Log(Mi^2/M1^2)*Log(Mj^2/M1^2)
+                               - ((1 - Mi^2/M1^2 - Mj^2/M1^2)^2 - 4*(Mi^2/M1^2)*(Mj^2/M1^2))
+                                *DTPHI2(Mi^2/M1^2,Mj^2/M1^2));
+.sort
+#endif
+
+#if ( `DIMENSION' == 3 )
+id IntDT(1,1,1,M?,M?,M?) = eM(M)^2*(pi/ep + DT11constant);
+.sort
+#endif
+
+* DTPHI1(z) depends on the ratio of masses and is defined in Nucl.Phys. B397 p130, p131.
+* DTPHI2(x,y) depends on the ratios of masses and is defined in Nucl.Phys. B397 p133, p135.
+
+******************
+* vim: syntax=form
+******************

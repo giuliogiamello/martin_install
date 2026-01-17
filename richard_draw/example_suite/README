@@ -1,0 +1,10 @@
+to test the program and produce some sample
+diagrams:
+
+1) go to one of the "test_" directories in this dir
+2) execute qgraf to produce the file diagrams.dat
+3) run richard_draw on the diagrams.dat file with your
+   options, e.g.,
+   richard_draw -s ../standardmodel.json  -s ../effective_counter.json diagrams.dat -o diagrams.tex
+4) run lualatex on the tex file
+   lualatex diagrams.tex

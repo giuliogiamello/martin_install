@@ -1,0 +1,15 @@
+output = 'diagrams.dat' ;
+
+style = '../../richard_draw.sty' ;
+
+model = '../standardmodel.lag' ;
+
+in = fb[q1],fD[q2];
+
+out = fd[q3],fB[q4];
+
+loops = 1 ;
+
+loop_momentum = p ;
+
+options = onshell;

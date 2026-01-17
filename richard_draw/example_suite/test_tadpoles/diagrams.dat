@@ -1,0 +1,96 @@
+<qgraf>
+
+<version>qgraf-3.6.10</version>
+<input>
+ output = 'diagrams.dat' ;
+ style = '../../richard_draw.sty' ;
+ model = '../standardmodel.lag' ;
+ in = fd[q1];
+ out = fd[q2];
+ loops = 1 ;
+ loop_momentum = p ;
+ options = onshell,tadpole;
+ true = iprop[a,g,G0,0,0];
+ true = iprop[h,1,1];
+ true = iprop[ft,1,1];
+</input>
+
+<diagrams>
+ 
+<dia>
+
+ <diadata>
+  <dianum>1</dianum>
+  <numin>1</numin>
+  <numout>1</numout>
+  <signsym>-1</signsym>
+  <numprops>2</numprops>
+  <numverts>2</numverts>
+  <loop>1</loop>
+ </diadata>
+
+ <incoming>
+  <leg>
+   <index>-1</index>
+   <field>fd</field>
+   <mom>q1</mom>
+   <to>1</to>
+  </leg>
+ </incoming>
+
+ <outgoing>
+  <leg>
+   <index>-2</index>
+   <field>fd</field>
+   <mom>q2</mom>
+   <from>1</from>
+  </leg>
+ </outgoing>
+
+ <propagators>
+  <propagator>
+   <index>1</index>
+   <mom>0</mom>
+   <field>h</field>
+   <antifield>h</antifield>
+   <from>2</from>
+   <to>1</to>
+   <from_index>2</from_index>
+   <to_index>1</to_index>
+  </propagator>
+  <propagator>
+   <index>2</index>
+   <mom>p1</mom>
+   <field>ft</field>
+   <antifield>fT</antifield>
+   <from>2</from>
+   <to>2</to>
+   <from_index>4</from_index>
+   <to_index>3</to_index>
+  </propagator>
+ </propagators>
+
+ <vertices>
+  <vertex>
+   <index>1</index>
+   <type>fD,fd,h</type>
+   <fields>-2,-1,1</fields>
+   <momenta>-q2,q1,0</momenta>
+   <vfunct>Fddh</vfunct>
+  </vertex>
+  <vertex>
+   <index>2</index>
+   <type>fT,ft,h</type>
+   <fields>4,3,2</fields>
+   <momenta>-p1,p1,0</momenta>
+   <vfunct>Ftth</vfunct>
+  </vertex>
+ </vertices>
+
+</dia>
+
+</diagrams>
+
+<totaldia>1</totaldia>
+
+</qgraf>

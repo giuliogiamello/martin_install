@@ -1,0 +1,40 @@
+*******************************************************************
+* Copyright (C) 2009-2023 Joachim Brod, Emmanuel Stamou
+*
+* This file is part of MaRTIn.
+*
+* MaRTIn is lisenced under GPLv3. For further details see the AUTHORS
+* file in the main MaRTIn directory.
+*******************************************************************
+
+exit "Check this before using";
+
+#include treatEps3d
+.sort
+
+#do m = 1,1
+   #do LINE = 1, `$nol'
+      #call diracalgebra3d(`LINE')
+      .sort
+   #enddo
+
+   #do LINE = 1,`$nol'
+      id g_(`LINE', uu1?) = dummynt(uu1);
+      id disorder dummynt(uu1?)*dummynt(uu2?) = aa*(2*d_(uu1, uu2)-dummynt(uu2)*dummynt(uu1));
+      id dummynt(uu1?) = g_(`LINE', uu1);
+      multiply gi_(`LINE');
+
+      .sort
+   #enddo
+
+   if ( count(aa,1) > 0 );
+      redefine m "0";
+      id aa = 1;
+   endif;
+   .sort
+
+#enddo
+
+******************
+* vim: syntax=form
+******************

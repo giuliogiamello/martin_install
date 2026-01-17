@@ -1,0 +1,34 @@
+*******************************************************************
+* Copyright (C) 2009-2020 Joachim Brod, Emmanuel Stamou
+*
+* This file is part of MaRTIn.
+*
+* MaRTIn is lisenced under GPLv3. For further details see the AUTHORS
+* file in the main MaRTIn directory.
+*******************************************************************
+
+*** Treat massless tadpoles ***************************************
+if (
+     ( match(Intpm(?a,M?!{,0})) == 0) &&
+     (
+       ( match(Intpm(p1,0)) != 0)    ||
+       ( match(Intpm(p2,0)) != 0)    ||
+       ( match(Intpm(p1,p2,0)) != 0)
+     )
+   ) discard;
+
+if (
+     ( match(Intpm(p1,p2,M?)) == 0) &&
+     (
+       ( (match(Intpm(p1,0)) != 0)  && (match(Intpm(p1,M?!{,0})) == 0))    ||
+       ( (match(Intpm(p2,0)) != 0)  && (match(Intpm(p2,M?!{,0})) == 0))
+     )
+   ) discard;
+
+#if (`LOOP' == 2)
+  if ((match(Intpm(p1,M?)) == 0) && (match(Intpm(p2,   M?)) == 0)) discard;
+  if ((match(Intpm(p1,M?)) == 0) && (match(Intpm(p1,p2,M?)) == 0)) discard;
+  if ((match(Intpm(p2,M?)) == 0) && (match(Intpm(p1,p2,M?)) == 0)) discard;
+#endif
+
+* vim: syntax=form

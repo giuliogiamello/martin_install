@@ -1,0 +1,5 @@
+*.log
+*.mp
+*[0-9]
+*_original.pdf
+*.pdf

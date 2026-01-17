@@ -1,0 +1,66 @@
+*******************************************************************
+* Copyright (C) 2009-2023 Joachim Brod, Emmanuel Stamou
+*
+* This file is part of MaRTIn.
+*
+* MaRTIn is lisenced under GPLv3. For further details see the AUTHORS
+* file in the main MaRTIn directory.
+*******************************************************************
+
+*.store
+*.sort
+*g testD1 = Deno(p1,M0)*Deno(p1+q1,M1)*Deno(p1+q2,M2)*Deno(p1+q3,M3)*p1(mu1)*p1.p1^4*p1.q3^2*p1.q1*q3.q2;
+*g atta1 = Deno(q1-q4, M1);
+*g atta2 = Deno(-q1-q4, M1);
+*g atta3 = Deno(-q3+2*q4-q6, M1);
+*g atta4 = Deno(q2-q4-q1, M1);
+*g atta5 = Deno(-q2-q1, M1);
+
+*** split Denos ***
+id Deno(?a,M?) = fakef1(?a)*fakef2(?a)*fakef3(M);
+
+argument fakef1;
+  id q?qext = 0;
+endargument;
+argument fakef2;
+  id p?pint = 0;
+endargument;
+
+id fakef1(?a)*fakef2(?b)*fakef3(?c) = Deno(int,?a,ext,?b,mass,?c);
+
+* q0 is the zero momentum
+id Deno(int, 0,       ext, 0,  mass, M?) = Deno(int, 0,  ext, q0, mass, M);
+id Deno(int, p1?pint, ext, 0,  mass, M?) = Deno(int, p1, ext, q0, mass, M);
+id Deno(int,-p1?pint, ext, 0,  mass, M?) = Deno(int, p1, ext, q0, mass, M);
+id Deno(int,-p1?pint, ext, q?, mass, M?) = Deno(int, p1, ext, -q, mass, M);
+
+id Deno(int, 0,       ext, q0,    mass, M?) = -1/M^2;
+#do i=1,10
+id Deno(int, 0,       ext, -q`i', mass, M?) = Deno(q`i',M);
+#enddo
+id Deno(int, 0,       ext, q?,    mass, M?) = Deno(q,M);
+
+id Deno(int, p1?pint, ext, q0, mass, M?) = Deno(p1,  M);
+id Deno(int, p1?pint, ext, q?, mass, M?) = Deno(p1+q,M);
+
+
+* Create the Int object
+
+multiply Int;
+
+* put all contracted loop momenta in Int
+repeat id p1.v1?   = Int(p1.v1);
+
+* put all uncontracted loop momenta in Int
+totensor p1, ttp1;
+id ttp1(mu1?) = Int(p1(mu1));
+
+repeat id Int(xx1?)*Int(xx2?) = Int(xx1*xx2);
+id Int*Int(xx1?) = Int(xx1);
+
+* put all Denos in the Int
+repeat id Int(?a)*Deno(v1?,M1?) = Int(?a,Deno(v1,M1));
+
+.sort
+
+* vim: syntax=form

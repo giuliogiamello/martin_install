@@ -1,0 +1,31 @@
+{
+    "fields": {
+        "fB":     ["$\\bar b$",         "anti fermion"],
+        "fb":     ["$b$",               "fermion"],
+        "fE":     ["$\\bar e$",         "anti fermion"],
+        "fe":     ["$e$",               "fermion"],
+        "a":      ["$A$",               "boson"]
+    },
+    
+    "artificial legs":  [ 
+        "effextQ",
+        "countt"
+    ],
+    
+    "artificial propagators":  [ 
+        "effQ1",
+        "effQ2"
+    ],
+
+    "decorated vertices": {
+        "VQ3":       ["[red]$Q_3$", "default effective"],
+        "VQeff":     ["[red]$Q_3$", "default effective"],
+        "VCountbb":  ["",           "default counterterm propagator"],
+        "VCountbba": ["",           "default counterterm vertex"]
+    },
+    
+    "vertex styles": {
+        "own vertex": "draw=blue, shape=circle, inner sep=5pt"
+    }
+
+}                           

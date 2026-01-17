@@ -1,0 +1,18 @@
+output = 'diagrams.dat' ;
+
+style = '../../richard_draw.sty' ;
+
+model = '../standardmodel.lag' ;
+
+in = fd[q1];
+
+out = fd[q2];
+
+loops = 1 ;
+
+loop_momentum = p ;
+
+options = onshell,tadpole;
+true = iprop[a,g,G0,0,0];
+true = iprop[h,1,1];
+true = iprop[ft,1,1];

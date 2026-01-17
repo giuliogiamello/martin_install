@@ -1,0 +1,235 @@
+*******************************************************************
+* Copyright (C) 2009-2023 Joachim Brod, Emmanuel Stamou
+*
+* This file is part of MaRTIn.
+*
+* MaRTIn is lisenced under GPLv3. For further details see the AUTHORS
+* file in the main MaRTIn directory.
+*******************************************************************
+
+*on names;
+
+symbol d;
+dimension d;
+
+**************************************************
+
+s I,pi,Pi,mu;
+s ep(:3);
+
+* default masses
+s  M1,...,M20;
+s  M, Mi, Mj, Mk, M0;
+
+* momenta
+v p,q,qc;
+v p1,...,p5;
+v q0,...,q10;
+v v1,...,v20;
+cf qq1,...,qq10;
+
+set pint:p1,...,p5;
+set qext:q0,...,q10;
+
+* symbols produced by qgraf and needed in gengraph
+cf F;
+f FL0,...,FL10;
+s xx1,...,xx10;
+cf npos,nneg;
+s prop,mom,mass,heavymass,lorentz,field,fname;
+cf pol,dummyspinor;
+s in,out;
+f USp,UbarSp,VSp,VbarSp;
+cf ee,eestar;
+
+set spinorFs: USp,UbarSp,VSp,VbarSp;
+
+* objects to save properly in Mathematica
+cf SPform(symmetric);
+
+
+*********************************************************************
+*** Integrating *****************************************************
+*********************************************************************
+
+cf Deno;
+cf eM;
+cf Intpm;
+
+s int, ext, pc, mIRA;
+
+s cp1,cp2,cp12;
+
+cf GAMMA,GAMMAINV;
+cf gamhelp,gamep;
+cf gaminvhelp,gaminvep;
+cf Zeta;
+cf Polygamma,Pochhammer,invPochhammer;
+cf deno,nom;
+
+cf Int,IntDT,IntBMU,IntBMUd,Int1l;
+cf Log,Li2;
+cf DTPHI1,DTPHI2;
+cf Delta,invDelta;
+s S2;
+
+*********************************************************************
+*** Flagging ********************************************************
+*********************************************************************
+
+cf Flag, cl, flagNumG5;
+
+
+*******************************************************************
+*** For Dirac algebra computations ********************************
+*******************************************************************
+
+i tempmu,tempmu1,...,tempmu4;
+i mu0,...,mu20;
+i nu0,...,nu20;
+set mmuu: mu1,...,mu20;
+set nnuu: nu1,...,nu20;
+
+* for tensorreduction
+t ttp1,...,ttp5;
+t ttq1,...,ttq10;
+
+i uu1,...,uu10;
+
+* for diracoperators
+i ind0,...,ind20;
+set indN:ind1,...,ind20;
+i isum0,...,isum100;
+set isumN:isum1,...,isum100;
+
+
+cf epfkt;
+cf cftensorp1,cftensorp2,cftensorj1,cftensorj2,cftensorj3;
+cf CDT;
+s num1, num2, num3;
+s Num1, Num2, Num3;
+s NUM1, NUM2, NUM3;
+
+
+cf epsilontensor;
+t dd(s);
+* the non-symmetric version, can be used with function argument wildcards
+*t ddn;
+
+s  ndr, hv, nndr, [D-2ep], [D], [-2ep];
+
+i IDi,G5i,DDIMi,HATi,TILi,AnC5i;
+
+*** The d-dimensional objects *************************************
+nt gam1,...,gam6;
+
+*** The (d-4)-dimensional objects *********************************
+nt gamhat1,...,gamhat6;
+t ddhat(s);
+
+*** The 4-dimensional objects *************************************
+nt gamtilde1,...,gamtilde6;
+t ddtilde(s);
+
+*** The Evanescent anticommutators with g5 ************************
+nt gamAnC51,...,gamAnC56;
+
+*** The Tracefunction
+cf <TR51(c)>,...,<TR56(c)>;
+ct <TR5T1(c)>,...,<TR5T6(c)>;
+
+*** The function we insert all
+cf Gam1,...,Gam6;
+f  GamF1,...,GamF6;
+ct GamT1,...,GamT6;
+
+*** The antisymmetrised product of N gammas ***********************
+nt GammaA1,...,GammaA6;
+
+*** The identities ************************************************
+t gi1,...,gi6;
+
+*** The Gamma5 (Non-Anticommuting) ********************************
+nt G51,...,G56;
+nt PL1,...,PL6;
+nt PR1,...,PR6;
+
+cf MathDirac;
+f DIRAC;
+s G5, PL, PR, one, AnC5, hat, tilde;
+set proj: one, G5, PL, PR;
+
+*** flag for sNDR scheme
+s flagsNDR;
+
+*********************************************************************
+*** For generic one-loop integrals **********************************
+*********************************************************************
+cf Tmaster,A,B,C,D;
+f Tdum1,Tdum2,Tdum3;
+s qmpair;
+
+*********************************************************************
+*** Dummy stuff for programming *************************************
+*********************************************************************
+
+s aa,counter;
+s sumind;
+
+f  dummyf1,...,dummyf10;
+f  dummyf,fakef;
+f  dummyfcy(c);
+cf dummycf, fakecf;
+cf dummycfsy(s);
+
+nt dummynt;
+t  dummyt;
+t  dummyta(a);
+
+cf dummycf1,dummycf2,dummycf3;
+cf fakecf1, fakecf2, fakecf3;
+f  fakef1,  fakef2,  fakef3;
+cf TEMP,TEMP1,TEMP2,TEMP3;
+
+*********************************************************************
+* colour stuff
+*********************************************************************
+
+* these functions accept symbols as variables, whereas d_ takes only indices
+cf Tcol,Dcol,Dadcol,Fcol,Cold;
+ct dcol(s);
+cf fcol(a);
+cf cold(s);
+cf trSU(cyclic);
+
+s nc,cF,cA;
+
+* the dimension of the adjoint
+s NcolA;
+
+* The indices of the adjoint
+dimension NcolA;
+i tempa,tempa1,tempa2,tempa3;
+i a1,...,a20;
+i b1,...,b20;
+set aaa: a1,...,a20;
+set bbb: b1,...,b20;
+
+* the dimension of the fundamental
+s NcolF;
+
+* The indices of the fundamental
+dimension NcolF;
+i tempi,tempi1,tempi2,tempi3;
+i i1,...,i20;
+i I1,...,I20;
+i j1,...,j20;
+i J1,...,J20;
+set ii: i1,...,i20;
+set II: I1,...,I20;
+set jj: j1,...,j20;
+set JJ: J1,...,J20;
+
+dimension d;
+
+* vim: syntax=form

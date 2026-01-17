@@ -1,0 +1,16 @@
+deno(`DIMENSION',-2)*deno({`DIMENSION'+2},-2)*deno({`DIMENSION'-1},-2)*(
+      d_(ind1,ind2)*d_(ind3,ind4)*
+          (  v1.v2*v3.v4*nom({`DIMENSION'+1},-2)
+           - v1.v3*v2.v4
+           - v1.v4*v2.v3)
+     +d_(ind1,ind3)*d_(ind2,ind4)*
+          (- v1.v2*v3.v4
+           + v1.v3*v2.v4*nom({`DIMENSION'+1},-2)
+           - v1.v4*v2.v3)
+     +d_(ind1,ind4)*d_(ind2,ind3)*
+          (- v1.v2*v3.v4
+           - v1.v3*v2.v4
+           + v1.v4*v2.v3*nom({`DIMENSION'+1},-2))
+    );
+
+*# vim: syntax=form

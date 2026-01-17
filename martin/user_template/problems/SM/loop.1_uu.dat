@@ -1,0 +1,82 @@
+*******************************************************************
+*** INPUT *********************************************************
+*******************************************************************
+
+*--#[ QGRAF :
+model = 'sm.prop.lag' ;
+model = 'sm.vrtx.lag' ;
+
+in =  fu[q1];
+out = fu[q1];
+
+loops = 1 ;
+loop_momentum = p;
+
+options =;
+
+true = bridge[a, g, z, G0, h, 0, 0] ;
+
+true = iprop[g, 1, 1] ;
+
+*--#] QGRAF :
+
+*--#[ MAIN :
+*
+
+#define FINALPRINT
+
+*******************************************************************
+* The physics *****************************************************
+*******************************************************************
+
+#define FINALEPLIM "-1"
+
+**** Select model ****
+#define NM "1"
+#define MODEL1 "SM"
+
+**** Gauge parameters ****
+#define GAUGEG "gaugeg"
+
+**** Perform Infrared Rearrangement (IRA) ****
+#define IRA "1"
+
+*** the dirac algebra scheme
+#define DSCHEME "NDR"
+
+*--#] MAIN :
+
+*******************************************************************
+* Additional FORM folds for twoloopmass ***************************
+*******************************************************************
+
+*--#[ USERDEF :
+s CF,alphas;
+*--#] USERDEF :
+
+*--#[ TEST :
+*--#] TEST :
+
+*--#[ FOLD1 :
+#include docolour
+*--#] FOLD1 :
+
+*--#[ FOLD2 :
+*--#] FOLD2 :
+
+*--#[ FOLD3 :
+*--#] FOLD3 :
+
+*--#[ FOLD4 :
+*--#] FOLD4 :
+
+*--#[ FOLD5 :
+id eM(mIRA) = 1;
+id nc = 2*CF + 1/nc;
+id gs^2 = 4*pi*alphas;
+*--#] FOLD5 :
+
+* vim: syntax=form
+
+
+
